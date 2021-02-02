@@ -1,0 +1,25 @@
+/.vs/
+
+/gpvulc/lib/
+/gpvulc/TEMP/
+/gpvulc-tests/TEMP/
+
+
+# Build files
+*.lib
+*.ilk
+*.exe
+*.sdf
+*.opensdf
+*.pch
+*.ipch
+*.*db
+*.db-*
+*.obj
+*.tlog
+*.lastbuildstate
+*.exp
+*.iobj
+*.dll
+
+
