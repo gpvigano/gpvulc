@@ -14,7 +14,7 @@ This collection include these libraries:
 * **gpvulc_cmd** - Command line utility (dependencies: gpvulc_filesystem)
 * **gpvulc_json** - JSON serialization utility based on [rapidjson] (dependencies: rapidjson)
 
-You can find the full documentation (automatically generated with [Doxygen]) and a distribution (in ZIP archives) of external libraries sources and binaries for VS2015 along with each release (see Releases section in [this GitHub page](https://github.com/gpvigano/gpvulc)). To get the compiled binaries for [Google C++ Testing Framework] a Visual Studio 2015 project was added in `depend/googletest/googletest-release-1.8.1/vs2015/` folder.
+You can find the full documentation (automatically generated with [Doxygen]) and a distribution (in ZIP archives) of external libraries sources and binaries for VS2015 along with each release (see Releases section in [this GitHub page](https://github.com/gpvigano/gpvulc)). To get the compiled binaries for [Google C++ Testing Framework] a Visual Studio 2015 project was added in `depend/googletest/googletest-release-1.8.1/vs2015/` folder. For [boost] you can find sources in `depend/boost/src` folder (VS2015 projects in `depend/boost/src/vs2015`).
 
 ## Remarks
 Even if designed with portability in mind, all libraries were developed with Visual Studio 2015 and tested on Windows platform (a porting to other platforms should be a nice contribution).
@@ -57,6 +57,8 @@ Libraries dependencies are summarized here:
 For some libraries (e.g. `gpvulc_text` and `gpvulc_path`) test projects are provided, implemented using [Google C++ Testing Framework].
 
 Libraries and their test projects are separated, so you can use the libraries without getting [Google C++ Testing Framework].
+
+If you don't want or cannot use the distribution provided with the releases you can follow the procedure described hereafter.
 
 In the `depend` folder you must put a distribution of the external libraries used: [Google C++ Testing Framework], [boost] and [rapidjson]. Include files of [Google C++ Testing Framework] must be put in `depend/boost/` (e.g. `depend/boost/boost/`). Compiled binaries of [Google C++ Testing Framework] must be put in a proper subfolder of `depend/googletest/lib/` folder (e.g. `gtest.lib` and `gtestd.lib` in `depend/googletest/lib/VC140-x64/` and `depend/googletest/lib/VC140-x86/` for Visual Studio 2015 with 64 and 32 bit platforms). For [boost] libraries include files must be put in `depend/boost/` (e.g. `depend/boost/boost/`) and compiled binaries must be put in `depend/boost/lib/` folder. For [rapidjson] library include files must be put in `depend/rapidjson/` (e.g. `depend/rapidjson/rapidjson/`)
 
