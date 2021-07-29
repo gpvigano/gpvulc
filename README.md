@@ -10,6 +10,8 @@ This collection include these libraries:
 * **gpvulc_path** - File/directory path management (dependencies: none)
 * **gpvulc_console** - Console utility (dependencies: none)
 
+You can find the full documentation (automatically generated with [Doxygen]) and a distribution (in ZIP archives) of external libraries sources and binaries for VS2015 along with each release (see Releases section in [this GitHub page](https://github.com/gpvigano/gpvulc)). To get the compiled binaries for [Google C++ Testing Framework] a Visual Studio 2015 project was added in `depend/googletest/googletest-release-1.8.1/vs2015/` folder.
+
 ## Remarks
 Even if designed with portability in mind, all libraries were developed with Visual Studio 2015 and tested on Windows platform (a porting to other platforms should be a nice contribution).
 Some remarks about the `gpvulc` libraries:
@@ -55,5 +57,6 @@ About multi-platform support: any contribution to support other platforms and co
 If you want to update the libraries you should build and run the tests in `gpvulc-tests/` folder with [Google C++ Testing Framework] before submitting your changes.
 
 [Google C++ Testing Framework]: https://github.com/google/googletest/releases
+[Doxygen]: http://www.doxygen.org/index.html
 [boost]: https://www.boost.org/
 
