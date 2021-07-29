@@ -1,14 +1,18 @@
 # GPV's Utility Libraries Collection for C++
-**version 1.0**
+**version 1.1**
 
 ---
-This is a collection of utility libraries for C++, based on the standard C++ library, with minimal external dependencies.
+This is a collection of utility libraries for C++, based on the standard C++ library, with minimal external dependencies (some of the libraries depend on [boost]).
 These libraries can come in handy for some small works (e.g. command line utilities) or used in other projects.
 
 This collection include these libraries:
 * **gpvulc_text** - Text buffering, processing and parsing (dependencies: none)
 * **gpvulc_path** - File/directory path management (dependencies: none)
 * **gpvulc_console** - Console utility (dependencies: none)
+* **gpvulc_time** - Date/time management (dependencies: boost)
+* **gpvulc_filesystem** - File system management (dependencies: boost, gpvulc_time, gpvulc_path, gpvulc_text)
+* **gpvulc_cmd** - Command line utility (dependencies: gpvulc_filesystem)
+* **gpvulc_json** - JSON serialization utility based on [rapidjson] (dependencies: rapidjson)
 
 You can find the full documentation (automatically generated with [Doxygen]) and a distribution (in ZIP archives) of external libraries sources and binaries for VS2015 along with each release (see Releases section in [this GitHub page](https://github.com/gpvigano/gpvulc)). To get the compiled binaries for [Google C++ Testing Framework] a Visual Studio 2015 project was added in `depend/googletest/googletest-release-1.8.1/vs2015/` folder.
 
@@ -18,6 +22,11 @@ Some remarks about the `gpvulc` libraries:
 * **gpvulc_text** is based on the standard C++ library, designed to provide a user-friendly programming interface, partly inspired by C# String class. This library should work with most operating systems.
 * **gpvulc_path** is a file path management utility, it is something like `boost_filesystem` library; if you are already using [boost] you are encouraged to use `boost_filesystem`. This library should work with most operating systems.
 * **gpvulc_console** is a console utility library.
+* **gpvulc_time** depends on [boost] for gregorian date system. This library should work with most operating systems.
+* **gpvulc_filesystem** depends on `gpvulc_time` (thus also on [boost]) and is not completely ported to all operating systems.
+* **gpvulc_cmd** provides a fast way to develop command line file processing utilities
+  (it depends on `gpvulc_filesystem`).
+* **gpvulc_json** - parser and writer classes that use [rapidjson] to parse and write documents into a string buffer, exceptions are handled in order to complete the document parsing, collecting errors in a final error summary; an exception can be thrown at the end with the error summary attached (it depends only on rapidjson).
 
 The following naming convention is adopted for folders:
 * `include`: header files
@@ -35,18 +44,23 @@ Projects for Visual Studio 2015 only are provided in this version.
 This feature could be a future development, changes are needed to prevent allocation and deallocation in different modules.
 
 ## Dependencies
+Some libraries use [boost] libraries (version 1.70.0). The boost folder is assumed to be in a folder `depend` (in the main folder), otherwise you must update the projects (the same holds for [rapidjson]).
 Libraries dependencies are summarized here:
 * **gpvulc_text**: none
 * **gpvulc_path**: none
 * **gpvulc_console**: none
+* **gpvulc_time**: boost
+* **gpvulc_filesystem**: boost, gpvulc_time, gpvulc_path, gpvulc_text
+* **gpvulc_cmd**: gpvulc_filesystem (and its dependencies)
+* **gpvulc_json**: rapidjson (version 1.1.0)
 
 For some libraries (e.g. `gpvulc_text` and `gpvulc_path`) test projects are provided, implemented using [Google C++ Testing Framework].
 
 Libraries and their test projects are separated, so you can use the libraries without getting [Google C++ Testing Framework].
 
-In the `depend` folder you must put a distribution of the external libraries used: [Google C++ Testing Framework]. Include files of [Google C++ Testing Framework] must be put in `depend/boost/` (e.g. `depend/boost/boost/`). Compiled binaries of [Google C++ Testing Framework] must be put in a proper subfolder of `depend/googletest/lib/` folder (e.g. `gtest.lib` and `gtestd.lib` in `depend/googletest/lib/VC140-x64/` and `depend/googletest/lib/VC140-x86/` for Visual Studio 2015 with 64 and 32 bit platforms).
+In the `depend` folder you must put a distribution of the external libraries used: [Google C++ Testing Framework], [boost] and [rapidjson]. Include files of [Google C++ Testing Framework] must be put in `depend/boost/` (e.g. `depend/boost/boost/`). Compiled binaries of [Google C++ Testing Framework] must be put in a proper subfolder of `depend/googletest/lib/` folder (e.g. `gtest.lib` and `gtestd.lib` in `depend/googletest/lib/VC140-x64/` and `depend/googletest/lib/VC140-x86/` for Visual Studio 2015 with 64 and 32 bit platforms). For [boost] libraries include files must be put in `depend/boost/` (e.g. `depend/boost/boost/`) and compiled binaries must be put in `depend/boost/lib/` folder. For [rapidjson] library include files must be put in `depend/rapidjson/` (e.g. `depend/rapidjson/rapidjson/`)
 
-You can change this configuration editing the property sheeets (`*.props` files) in `gpvulc-tests/` folder.
+You can change this configuration editing the property sheeets (`*.props` files) in `gpvulc/projects/vs2015/` and in `gpvulc-tests/` (remember to change also the `BOOST_VER` variable, if needed).
 
 ### Contributing
 
@@ -59,4 +73,4 @@ If you want to update the libraries you should build and run the tests in `gpvul
 [Google C++ Testing Framework]: https://github.com/google/googletest/releases
 [Doxygen]: http://www.doxygen.org/index.html
 [boost]: https://www.boost.org/
-
+[rapidjson]: https://github.com/miloyip/rapidjson/
