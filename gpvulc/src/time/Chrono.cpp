@@ -40,8 +40,15 @@ namespace gpvulc
 	void Chrono::Start()
 	{
 
-		if (Paused) { Resume(); return; }
-		if (Started) return;
+		if (Paused)
+		{
+			Resume();
+			return;
+		}
+		if (Started)
+		{
+			return;
+		}
 		StartTime = GetRunTimeSeconds();
 		Started = true;
 		Paused = false;
@@ -51,7 +58,10 @@ namespace gpvulc
 
 	double Chrono::Pause()
 	{
-		if (!Started) return -1.0;
+		if (!Started)
+		{
+			return -1.0;
+		}
 		if (!Paused)
 		{
 			PauseTime = GetRunTimeSeconds();
@@ -63,8 +73,14 @@ namespace gpvulc
 
 	void Chrono::Resume()
 	{
-		if (!Started) return;
-		if (!Paused) return;
+		if (!Started)
+		{
+			return;
+		}
+		if (!Paused)
+		{
+			return;
+		}
 		IdleTime += GetRunTimeSeconds() - PauseTime;
 		//StartTime = GetRunTimeSeconds()-(PauseTime-StartTime);
 		Paused = false;
@@ -73,8 +89,14 @@ namespace gpvulc
 
 	double Chrono::GetElapsedTime()
 	{
-		if (!Started) return 0.0;
-		if (Paused) return PauseTime - StartTime - IdleTime;
+		if (!Started)
+		{
+			return 0.0;
+		}
+		if (Paused)
+		{
+			return PauseTime - StartTime - IdleTime;
+		}
 		return ElapsedTime = GetRunTimeSeconds() - StartTime - IdleTime;
 	}
 

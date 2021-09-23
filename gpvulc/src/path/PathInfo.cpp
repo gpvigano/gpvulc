@@ -116,7 +116,10 @@ namespace gpvulc
 	{
 		size_t colon = str.find(':');
 		// check that all the strings include valid paths
-		if (str.size() > colon && HasColon(&str[colon + 1])) return;
+		if (str.size() > colon && HasColon(&str[colon + 1]))
+		{
+			return;
+		}
 		DirtyPath();
 		bool str_valid = !str.empty();
 		bool s1_valid = !s1.empty() && !HasColon(s1);
@@ -158,7 +161,10 @@ namespace gpvulc
 
 	void PathInfo::SetDevice(const std::string& str)
 	{
-		if (mDevice == str) return;
+		if (mDevice == str)
+		{
+			return;
+		}
 		SplitPath();
 		mDevice = str;
 		mPath = mDevice + mRootPath;
@@ -196,7 +202,10 @@ namespace gpvulc
 		mName.clear();
 		mExt.clear();
 
-		if (mFullName.empty()) return;
+		if (mFullName.empty())
+		{
+			return;
+		}
 
 		int len = (int)mFullName.length();
 		size_t dot = mFullName.rfind('.');
@@ -282,10 +291,16 @@ namespace gpvulc
 
 	void PathInfo::SetFullPath(const std::string& fullpath)
 	{
-		if (&fullpath == &mFullPath) return;
+		if (&fullpath == &mFullPath)
+		{
+			return;
+		}
 
 		Reset();
-		if (fullpath.empty()) return;
+		if (fullpath.empty())
+		{
+			return;
+		}
 
 		if (fullpath == "." || fullpath == "..")
 		{
@@ -329,7 +344,10 @@ namespace gpvulc
 
 	const std::string& PathInfo::GetFullPath() const
 	{
-		if (mFullPathReady) return mFullPath;
+		if (mFullPathReady)
+		{
+			return mFullPath;
+		}
 		mFullPathReady = true;
 		mFullPath.clear();
 
@@ -548,25 +566,41 @@ namespace gpvulc
 
 	bool PathInfo::IsRelative() const
 	{
-		if (mPath.empty()) return true;
-		if (mPath[0] == mDirSep[0]) return false;
+		if (mPath.empty())
+		{
+			return true;
+		}
+		if (mPath[0] == mDirSep[0])
+		{
+			return false;
+		}
 		//int len = mPath.length();
-		if (!mDevice.empty()) return false; // drive letter found
-	  //  if ( len>1 && isalpha(mPath[0]) && mPath[1]==':' ) return false; // drive letter found
+		if (!mDevice.empty())
+		{
+			// drive letter found
+			return false;
+		}
+
 		return true;
 	}
 
 
 	bool PathInfo::JoinPath(const std::string& path)
 	{
-		if (path.empty()) return true;
+		if (path.empty())
+		{
+			return true;
+		}
 		if (mPath.empty())
 		{
 			SetPath(path);
 			return true;
 		}
 		PathInfo fi(path);
-		if (!fi.IsRelative()) return false;
+		if (!fi.IsRelative())
+		{
+			return false;
+		}
 		SetPath(mPath, path);
 		//Compact();
 
@@ -576,7 +610,10 @@ namespace gpvulc
 
 	bool PathInfo::ChangeToAbsPathFromCurrDir()
 	{
-		if (!mPath.empty() && !IsRelative()) return false;
+		if (!mPath.empty() && !IsRelative())
+		{
+			return false;
+		}
 
 		PathInfo prevpath(GetFullPath());
 		prevpath.SetFullName("");
@@ -589,7 +626,10 @@ namespace gpvulc
 
 	bool PathInfo::ChangeToRelPathFromCurrDir()
 	{
-		if (!mPath.empty() && IsRelative()) return false;
+		if (!mPath.empty() && IsRelative())
+		{
+			return false;
+		}
 
 		return SetRelativeToPath(GetCurrPath().GetPath());
 	}
@@ -598,7 +638,10 @@ namespace gpvulc
 	bool PathInfo::UpperPath()
 	{
 		if (!mRootPathReady) SplitPath();
-		if (mRootPath.empty() || mRootPath == mDirSep) return false;
+		if (mRootPath.empty() || mRootPath == mDirSep)
+		{
+			return false;
+		}
 		std::string tmp = mRootPath;
 		size_t last_pos = std::string::npos;
 		if (IsDirSep(tmp.back())) last_pos = tmp.size() - 2;
@@ -622,7 +665,10 @@ namespace gpvulc
 
 	void PathInfo::FixDirSep(std::string& buffer) const
 	{
-		if (buffer.empty()) return;
+		if (buffer.empty())
+		{
+			return;
+		}
 
 		char other = (mDirSep[0] == '\\') ? '/' : '\\';
 		size_t n = buffer.size();
@@ -665,10 +711,16 @@ namespace gpvulc
 
 	void PathInfo::Compact()
 	{
-		if (mPath.empty()) return;
+		if (mPath.empty())
+		{
+			return;
+		}
 		// search the dot
 		size_t dot = mPath.find('.');
-		if (dot == std::string::npos) return;
+		if (dot == std::string::npos)
+		{
+			return;
+		}
 		bool dotdot = false;
 
 		DirtyPath();
@@ -677,7 +729,10 @@ namespace gpvulc
 		{
 			size_t olddot = dot;
 			size_t len = mPath.length() - dot;
-			if (len < 2) return;
+			if (len < 2)
+			{
+				return;
+			}
 			// search ".\"
 			if (mPath[dot + 1] == mDirSep[0])
 			{ // remove ".\"

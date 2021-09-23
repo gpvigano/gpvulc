@@ -88,7 +88,10 @@ namespace gpvulc
 
 	bool TextBuffer::IntToPos(int pos, size_t& search_pos, bool rev) const
 	{
-		if (mStdString.empty()) return false;
+		if (mStdString.empty())
+		{
+			return false;
+		}
 		if (rev)
 		{
 			if (pos >= 0 && pos < (int)mStdString.size()) search_pos = (size_t)pos;
@@ -96,7 +99,10 @@ namespace gpvulc
 		}
 		else
 		{
-			if (pos >= (int)mStdString.size()) return false;
+			if (pos >= (int)mStdString.size())
+			{
+				return false;
+			}
 			if (pos >= 0) search_pos = (size_t)pos;
 			else search_pos = 0;
 		}
@@ -106,7 +112,10 @@ namespace gpvulc
 
 	TextBuffer& TextBuffer::Fill(int start, int end, char c)
 	{
-		if (mStdString.empty()) return *this;
+		if (mStdString.empty())
+		{
+			return *this;
+		}
 		if (start < 0) start = 0;
 		if (end < 0) end = (int)mStdString.size() - 1;
 		for (int i = start; i <= end && i < (int)mStdString.size(); ++i)
@@ -189,7 +198,10 @@ namespace gpvulc
 
 	TextBuffer& TextBuffer::Cat(const std::string& s, size_t chars)
 	{
-		if (s.empty()) return *this;
+		if (s.empty())
+		{
+			return *this;
+		}
 		if (chars) mStdString.append(s.c_str(), chars);
 		else mStdString += s;
 		return *this;
@@ -198,7 +210,10 @@ namespace gpvulc
 
 	TextBuffer& TextBuffer::Cat(const char* str, size_t chars)
 	{
-		if (str == nullptr) return *this;
+		if (str == nullptr)
+		{
+			return *this;
+		}
 		if (chars) mStdString.append(str, chars);
 		else mStdString.append(str);
 
@@ -271,9 +286,18 @@ namespace gpvulc
 	{
 		int retval = 0;
 
-		if (mStdString.empty() && str.empty()) return 0;
-		if (!mStdString.empty() && str.empty()) return 1;
-		if (mStdString.empty() && !str.empty()) return -1;
+		if (mStdString.empty() && str.empty())
+		{
+			return 0;
+		}
+		if (!mStdString.empty() && str.empty())
+		{
+			return 1;
+		}
+		if (mStdString.empty() && !str.empty())
+		{
+			return -1;
+		}
 		// !mStdString.empty() && !str.empty()
 		retval = case_insensitive ? strcasecmp(mStdString.c_str(), str.c_str()) : mStdString.compare(str);
 
@@ -286,7 +310,10 @@ namespace gpvulc
 	{
 		size_t begidx, endidx;
 
-		if (mStdString.empty()) return *this;
+		if (mStdString.empty())
+		{
+			return *this;
+		}
 
 		begidx = 0;
 		if (!startstr.empty())
@@ -311,11 +338,20 @@ namespace gpvulc
 		const char *tmp;
 		size_t n, ns;
 
-		if (mStdString.empty()) return false;
-		if (str.empty()) return false;
+		if (mStdString.empty())
+		{
+			return false;
+		}
+		if (str.empty())
+		{
+			return false;
+		}
 		n = str.length();
 		ns = mStdString.length();
-		if (n > ns) return false;
+		if (n > ns)
+		{
+			return false;
+		}
 		tmp = &mStdString[ns - n];
 		return case_insensitive ? !strncasecmp(tmp, str.c_str(), n) : !strncmp(tmp, str.c_str(), n);
 	}
@@ -323,28 +359,49 @@ namespace gpvulc
 
 	bool TextBuffer::MiddleStr(const std::string& str, int beg, bool case_insensitive) const
 	{
-		if (str.empty()) return false;
+		if (str.empty())
+		{
+			return false;
+		}
 		size_t beg_pos;
-		if (!IntToPos(beg, beg_pos, false)) return false;
+		if (!IntToPos(beg, beg_pos, false))
+		{
+			return false;
+		}
 		size_t end_pos;
-		if (!IntToPos(beg + (int)str.length() - 1, end_pos, true)) return false;
+		if (!IntToPos(beg + (int)str.length() - 1, end_pos, true))
+		{
+			return false;
+		}
 		std::string subs = GetSubString(beg, (int)end_pos);
-		if (case_insensitive) return GetLowerStr(subs) == GetLowerStr(str);
+		if (case_insensitive)
+		{
+			return GetLowerStr(subs) == GetLowerStr(str);
+		}
 		return subs == str;
 	}
 
 
 	bool TextBuffer::Contains(const std::string& str, bool case_insensitive) const
 	{
-		if (str.empty()) return false;
-		if (case_insensitive) return GetLowerStr(mStdString).find(GetLowerStr(str)) != std::string::npos;
+		if (str.empty())
+		{
+			return false;
+		}
+		if (case_insensitive)
+		{
+			return GetLowerStr(mStdString).find(GetLowerStr(str)) != std::string::npos;
+		}
 		return mStdString.find(str) != std::string::npos;
 	}
 
 
 	bool TextBuffer::Has(const std::string& str, bool case_insensitive) const
 	{
-		if (mStdString.empty() || str.empty()) return false;
+		if (mStdString.empty() || str.empty())
+		{
+			return false;
+		}
 		size_t pos = std::string::npos;
 		if (case_insensitive) pos = GetLowerCase().find_first_of(GetLowerStr(str));
 		else pos = mStdString.find_first_of(str);
@@ -407,7 +464,7 @@ namespace gpvulc
 			}
 			offset = idx + delimiterString.size();
 		}
-		if (offset<(int)mStdString.size())
+		if (offset < (int)mStdString.size())
 		{
 			subStrings.push_back(mStdString.substr(offset));
 		}
@@ -418,7 +475,10 @@ namespace gpvulc
 	int TextBuffer::FindFirstOf(const std::string& str, int start, bool case_insensitive) const
 	{
 		size_t search_pos;
-		if (!IntToPos(start, search_pos, false)) return -1;
+		if (!IntToPos(start, search_pos, false))
+		{
+			return -1;
+		}
 		size_t pos = std::string::npos;
 		if (case_insensitive) pos = GetLowerCase().find_first_of(GetLowerStr(str), search_pos);
 		else pos = mStdString.find_first_of(str, search_pos);
@@ -429,7 +489,10 @@ namespace gpvulc
 	int TextBuffer::FindLastOf(const std::string& str, int start, bool case_insensitive) const
 	{
 		size_t search_pos;
-		if (!IntToPos(start, search_pos, true)) return -1;
+		if (!IntToPos(start, search_pos, true))
+		{
+			return -1;
+		}
 		size_t pos = std::string::npos;
 		if (case_insensitive) pos = GetLowerCase().find_last_of(GetLowerStr(str), search_pos);
 		else pos = mStdString.find_last_of(str, search_pos);
@@ -441,7 +504,10 @@ namespace gpvulc
 	int TextBuffer::FindChar(char chr, int start, bool case_insensitive) const
 	{
 		size_t search_pos;
-		if (!IntToPos(start, search_pos, false)) return -1;
+		if (!IntToPos(start, search_pos, false))
+		{
+			return -1;
+		}
 		size_t pos = std::string::npos;
 		if (case_insensitive) pos = GetLowerCase().find(tolower(chr), search_pos);
 		else pos = mStdString.find(chr, search_pos);
@@ -452,7 +518,10 @@ namespace gpvulc
 	int TextBuffer::FindLastChar(char chr, int start, bool case_insensitive) const
 	{
 		size_t search_pos;
-		if (!IntToPos(start, search_pos, true)) return -1;
+		if (!IntToPos(start, search_pos, true))
+		{
+			return -1;
+		}
 		size_t pos = std::string::npos;
 		if (case_insensitive) pos = GetLowerCase().rfind(tolower(chr), search_pos);
 		else pos = mStdString.rfind(chr, search_pos);
@@ -463,7 +532,10 @@ namespace gpvulc
 	int TextBuffer::FindFirstNotOf(const std::string& str, int start, bool case_insensitive) const
 	{
 		size_t search_pos;
-		if (!IntToPos(start, search_pos, false)) return -1;
+		if (!IntToPos(start, search_pos, false))
+		{
+			return -1;
+		}
 		size_t pos;
 		if (case_insensitive)
 		{
@@ -483,7 +555,10 @@ namespace gpvulc
 	int TextBuffer::FindLastNotOf(const std::string& str, int start, bool case_insensitive) const
 	{
 		size_t search_pos;
-		if (!IntToPos(start, search_pos, true)) return -1;
+		if (!IntToPos(start, search_pos, true))
+		{
+			return -1;
+		}
 		size_t pos;
 		if (case_insensitive)
 		{
@@ -506,7 +581,10 @@ namespace gpvulc
 		int startpos) const
 	{
 		size_t search_pos;
-		if (!IntToPos(startpos, search_pos, false)) return -1;
+		if (!IntToPos(startpos, search_pos, false))
+		{
+			return -1;
+		}
 		int start_idx;
 		const char* temp = nullptr;
 		size_t pos = std::string::npos;
@@ -518,7 +596,10 @@ namespace gpvulc
 		{
 			pos = mStdString.find(str, search_pos);
 		}
-		if (pos == std::string::npos) return -1;
+		if (pos == std::string::npos)
+		{
+			return -1;
+		}
 		start_idx = (int)pos;
 
 		if (words_only)
@@ -542,7 +623,10 @@ namespace gpvulc
 		int startpos) const
 	{
 		size_t search_pos;
-		if (!IntToPos(startpos, search_pos, true)) return -1;
+		if (!IntToPos(startpos, search_pos, true))
+		{
+			return -1;
+		}
 		int start_idx;
 		const char* temp = nullptr;
 		size_t pos = std::string::npos;
@@ -554,7 +638,10 @@ namespace gpvulc
 		{
 			pos = mStdString.rfind(str, search_pos);
 		}
-		if (pos == std::string::npos) return -1;
+		if (pos == std::string::npos)
+		{
+			return -1;
+		}
 		start_idx = (int)pos;
 
 		if (words_only)
@@ -602,7 +689,10 @@ namespace gpvulc
 		int startpos)
 	{
 		int idx = FindSubString(substr, case_sensitive, words_only, startpos);
-		if (idx < 0) return -1;
+		if (idx < 0)
+		{
+			return -1;
+		}
 
 		mStdString.erase((size_t)idx, substr.length());
 		mStdString.insert((size_t)idx, str);
@@ -613,7 +703,10 @@ namespace gpvulc
 
 	TextBuffer& TextBuffer::Erase(int start, int end)
 	{
-		if (mStdString.empty() || start < 0) return *this;
+		if (mStdString.empty() || start < 0)
+		{
+			return *this;
+		}
 		if (start < 0) start = 0;
 		if (end < 0 || end >= (int)mStdString.size() - 1) end = (int)mStdString.size() - 1;
 		if (start > end) std::swap(start, end);
@@ -627,13 +720,19 @@ namespace gpvulc
 
 	std::string TextBuffer::GetSubString(int beg, int end) const
 	{
-		if (mStdString.empty()) return "";
+		if (mStdString.empty())
+		{
+			return "";
+		}
 		if (beg < 0) beg = 0;
 		if (end < 0 || end >= (int)mStdString.size())
 		{
 			end = (int)mStdString.size() - 1;
 		}
-		if (end < beg) return "";
+		if (end < beg)
+		{
+			return "";
+		}
 		size_t offset = beg;
 		size_t count = end - beg + 1;
 
@@ -650,7 +749,10 @@ namespace gpvulc
 
 	TextBuffer& TextBuffer::ClipChars(int beg, int end)
 	{
-		if (mStdString.empty()) return *this;
+		if (mStdString.empty())
+		{
+			return *this;
+		}
 		int len = Length();
 		if (len <= beg + end) mStdString = "";
 		else Set(GetSubString(beg, len - 1 - end));
@@ -662,7 +764,10 @@ namespace gpvulc
 	{
 		int len = Length();
 		int str_len = (int)str.length();
-		if (pos < 0 || len == 0 || str_len == 0 || pos >= len) return *this;
+		if (pos < 0 || len == 0 || str_len == 0 || pos >= len)
+		{
+			return *this;
+		}
 		mStdString.insert((size_t)pos, str);
 		return *this;
 	}
@@ -671,7 +776,10 @@ namespace gpvulc
 	TextBuffer& TextBuffer::InsertChar(int pos, char ch, int count)
 	{
 		int len = Length();
-		if (len == 0 || pos<0 || count <= 0 || pos + count>len) return *this;
+		if (len == 0 || pos<0 || count <= 0 || pos + count>len)
+		{
+			return *this;
+		}
 		mStdString.insert((size_t)pos, count, ch);
 		return *this;
 	}
@@ -701,7 +809,10 @@ namespace gpvulc
 	{
 		int len = (int)mStdString.length();
 		int str_len = (int)str.length();
-		if (len == 0 || str_len == 0 || pos >= len) return *this;
+		if (len == 0 || str_len == 0 || pos >= len)
+		{
+			return *this;
+		}
 		mStdString.replace((size_t)pos, str_len, str);
 		return *this;
 	}
@@ -719,7 +830,10 @@ namespace gpvulc
 
 	bool TextBuffer::MadeOf(const std::string& str, bool case_insensitive) const
 	{
-		if (mStdString.empty()) return false;
+		if (mStdString.empty())
+		{
+			return false;
+		}
 		size_t pos = std::string::npos;
 		if (case_insensitive) pos = GetLowerCase().find_first_not_of(GetLowerStr(str));
 		else pos = mStdString.find_first_not_of(str);
@@ -734,9 +848,15 @@ namespace gpvulc
 		int startpos,
 		int endpos)
 	{
-		if (startpos < 0) return 0;
+		if (startpos < 0)
+		{
+			return 0;
+		}
 		int len(Length());
-		if (!len) return 0;
+		if (!len)
+		{
+			return 0;
+		}
 		if (endpos < 0) endpos = len - 1;
 		if (startpos > endpos) std::swap(startpos, endpos);
 		if (endpos > (int)len - 1) endpos = len - 1;
@@ -775,7 +895,10 @@ namespace gpvulc
 
 	std::string TextBuffer::GetLowerCase() const
 	{
-		if (mStdString.empty()) return "";
+		if (mStdString.empty())
+		{
+			return "";
+		}
 
 		return GetLowerStr(mStdString);
 	}
@@ -783,7 +906,10 @@ namespace gpvulc
 
 	std::string TextBuffer::GetSentenceCase() const
 	{
-		if (mStdString.empty()) return "";
+		if (mStdString.empty())
+		{
+			return "";
+		}
 		std::string cpt = mStdString;
 		size_t len = cpt.length();
 		size_t i = 0;
@@ -804,7 +930,10 @@ namespace gpvulc
 
 	std::string TextBuffer::GetProperCase() const
 	{
-		if (mStdString.empty()) return "";
+		if (mStdString.empty())
+		{
+			return "";
+		}
 		bool capital = true;
 		std::string cpt = mStdString;
 		size_t len = cpt.length();
@@ -859,7 +988,10 @@ namespace gpvulc
 
 	bool TextBuffer::Read(std::istream& inStream)
 	{
-		if (!inStream.good()) return false;
+		if (!inStream.good())
+		{
+			return false;
+		}
 		inStream >> *this;
 		return true;
 	}
@@ -867,7 +999,10 @@ namespace gpvulc
 
 	bool TextBuffer::ReadLine(std::istream& inStream, bool appendNewline, bool appendEofNewline)
 	{
-		if (!inStream.good()) return false;
+		if (!inStream.good())
+		{
+			return false;
+		}
 		std::getline(inStream, mStdString);
 		if (appendNewline && (inStream.good() || appendEofNewline))
 		{
@@ -879,7 +1014,10 @@ namespace gpvulc
 
 	bool TextBuffer::AppendLine(std::istream& inStream, bool appendNewline, bool appendEofNewline)
 	{
-		if (!inStream.good()) return false;
+		if (!inStream.good())
+		{
+			return false;
+		}
 		std::string strline;
 		std::getline(inStream, strline);
 		mStdString += strline;
@@ -929,7 +1067,10 @@ namespace gpvulc
 
 	bool TextBuffer::Write(std::ostream& ostrm) const
 	{
-		if (!ostrm.good()) return false;
+		if (!ostrm.good())
+		{
+			return false;
+		}
 		ostrm << *this;
 
 		return true;
@@ -1043,8 +1184,14 @@ namespace gpvulc
 
 	bool TextBuffer::StartsWith(const std::string& str, bool case_insensitive) const
 	{
-		if (str.empty()) return false;
-		if (mStdString.empty()) return false;
+		if (str.empty())
+		{
+			return false;
+		}
+		if (mStdString.empty())
+		{
+			return false;
+		}
 		int len = (int)str.length();
 		std::string subs = GetSubString(0, len - 1);
 		return StrEqual(subs, str, case_insensitive);
@@ -1053,7 +1200,10 @@ namespace gpvulc
 
 	bool TextBuffer::StartsWithThenCut(const std::string& str, bool case_insensitive)
 	{
-		if (!StartsWith(str, case_insensitive)) return false;
+		if (!StartsWith(str, case_insensitive))
+		{
+			return false;
+		}
 		mStdString.erase(0, str.length());
 		return true;
 	}
@@ -1082,7 +1232,10 @@ namespace gpvulc
 
 	int TextBuffer::CountLines() const
 	{
-		if (mStdString.empty()) return 0;
+		if (mStdString.empty())
+		{
+			return 0;
+		}
 		int count = 1;
 		size_t len = (int)mStdString.length();
 		for (size_t i = 0; i < len - 1; ++i)
@@ -1095,7 +1248,10 @@ namespace gpvulc
 
 	std::string TextBuffer::GetIndented(int n, char c) const
 	{
-		if (mStdString.empty()) return "";
+		if (mStdString.empty())
+		{
+			return "";
+		}
 		std::string unind = mStdString;
 		IndentStr(unind, n, c);
 		return unind;
@@ -1104,7 +1260,10 @@ namespace gpvulc
 
 	std::string TextBuffer::GetUnindented(int n, char c) const
 	{
-		if (mStdString.empty()) return "";
+		if (mStdString.empty())
+		{
+			return "";
+		}
 		std::string unind = mStdString;
 		UnindentStr(unind, n, c);
 		return unind;
@@ -1140,21 +1299,30 @@ namespace gpvulc
 
 	bool TextBuffer::IsLower(int i) const
 	{
-		if (i < 0 || i >= (int)mStdString.length()) return false;
+		if (i < 0 || i >= (int)mStdString.length())
+		{
+			return false;
+		}
 		return islower(mStdString[i]) != 0;
 	}
 
 
 	bool TextBuffer::IsUpper(int idx) const
 	{
-		if (idx < 0 || idx >= (int)mStdString.length()) return false;
+		if (idx < 0 || idx >= (int)mStdString.length())
+		{
+			return false;
+		}
 		return isupper(mStdString[idx]) != 0;
 	}
 
 
 	bool TextBuffer::IsAlNum(int idx) const
 	{
-		if (idx < 0 || idx >= (int)mStdString.length()) return false;
+		if (idx < 0 || idx >= (int)mStdString.length())
+		{
+			return false;
+		}
 		const char& c = mStdString[idx];
 		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
 	}
@@ -1162,7 +1330,10 @@ namespace gpvulc
 
 	bool TextBuffer::IsAlNum_(int idx) const
 	{
-		if (idx < 0 || idx >= (int)mStdString.length()) return false;
+		if (idx < 0 || idx >= (int)mStdString.length())
+		{
+			return false;
+		}
 		const char& c = mStdString[idx];
 		return c == '_' || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
 	}
@@ -1170,7 +1341,10 @@ namespace gpvulc
 
 	bool TextBuffer::IsSpace(int idx) const
 	{
-		if (idx < 0 || idx >= (int)mStdString.length()) return false;
+		if (idx < 0 || idx >= (int)mStdString.length())
+		{
+			return false;
+		}
 		const char& c = mStdString[idx];
 		return c == ' ' || c == '\t' || c == '\n' || c == '\r';
 	}
@@ -1178,7 +1352,10 @@ namespace gpvulc
 
 	int TextBuffer::CountChar(char c, int start, int end, bool case_insensitive) const
 	{
-		if (mStdString.empty()) return 0;
+		if (mStdString.empty())
+		{
+			return 0;
+		}
 		int len = (int)mStdString.length();
 		if (end < 0) end = len - 1;
 		int count = 0;

@@ -108,14 +108,14 @@ namespace gpvulc
 
 		/*!
 		Extract a block delimited by tags.
-		Nested blocks are found at the given level (1 = first level, default).
+		Nested blocks are found at the given level (0 = ignore levels, default is 1 = first level).
 		*/
 		bool GetBlock(const std::string& begintag, const std::string& endtag,
 			int level = 1);
 
 		/*!
 		Extract a block delimited by tags (searching back).
-		Nested blocks are found at the given level (1 = first level, default).
+		Nested blocks are found at the given level (0 = ignore levels, default is 1 = first level).
 		*/
 		bool GetBackBlock(const std::string& begintag, const std::string& endtag,
 			int level = 1);
@@ -123,7 +123,7 @@ namespace gpvulc
 		/*!
 		Get a block after a given label.
 		@details Extract a block delimited by tags following a given label.
-		Nested blocks are found at the given level.
+		Nested blocks are found at the given level (0 = ignore levels, default is 1 = first level).
 		*/
 		bool GetBlockAfter(const std::string& label, const std::string& begintag,
 			const std::string& endtag, int level = 1);

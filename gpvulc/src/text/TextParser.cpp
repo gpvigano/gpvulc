@@ -40,7 +40,10 @@ namespace gpvulc
 
 	bool TextParser::Backward(int steps)
 	{
-		if (mCurrPos < steps) return false;
+		if (mCurrPos < steps)
+		{
+			return false;
+		}
 
 		mResult = mInputText.GetSubString(mCurrPos - steps, mCurrPos - 1);
 		SaveCurrPos();
@@ -66,7 +69,7 @@ namespace gpvulc
 	bool TextParser::CompareList(const std::vector<std::string>& referenceStrings) const
 	{
 		TextBuffer temp = mInputText.GetSubString(mCurrPos);
-		for(const std::string& s : referenceStrings)
+		for (const std::string& s : referenceStrings)
 		{
 			if (temp.StartsWith(s, mCaseInsensitive))
 			{
@@ -79,10 +82,16 @@ namespace gpvulc
 
 	bool TextParser::CompareStrChr(const std::string& s, const std::string& choice) const
 	{
-		if (s.empty() || choice.empty()) return false;
+		if (s.empty() || choice.empty())
+		{
+			return false;
+		}
 		TextBuffer temp(mInputText.GetSubString(mCurrPos));
 
-		if (!temp.StartsWith(s, mCaseInsensitive)) return false;
+		if (!temp.StartsWith(s, mCaseInsensitive))
+		{
+			return false;
+		}
 		std::string remainder = temp.GetSubString((int)s.length());
 		size_t idx = remainder.find_first_of(choice);
 		return idx == 0;
@@ -96,7 +105,10 @@ namespace gpvulc
 
 	bool TextParser::Forward(int steps)
 	{
-		if (steps <= 0) return false;
+		if (steps <= 0)
+		{
+			return false;
+		}
 		if (mCurrPos <= mInputText.GetSize() - steps)
 		{
 			mResult = mInputText.GetSubString(mCurrPos, mCurrPos + steps - 1);
@@ -117,7 +129,10 @@ namespace gpvulc
 		int blocklevel = 0;
 		bool quoted = false;
 
-		if (begintag.empty() || endtag.empty()) return false;
+		if (begintag.empty() || endtag.empty())
+		{
+			return false;
+		}
 
 		for (int i = mCurrPos - 1; i >= 0; --i)
 		{
@@ -166,14 +181,20 @@ namespace gpvulc
 
 	const std::string TextParser::GetParsedText() const
 	{
-		if (mCurrPos == 0) return "";
+		if (mCurrPos == 0)
+		{
+			return "";
+		}
 		return mInputText.GetSubString(0, mCurrPos - 1);
 	}
 
 
 	const std::string TextParser::GetNotParsedText() const
 	{
-		if (Complete()) return "";
+		if (Complete())
+		{
+			return "";
+		}
 		return mInputText.GetSubString(mCurrPos);
 	}
 
@@ -314,11 +335,17 @@ namespace gpvulc
 		int level)
 	{
 		int idx = mInputText.FindSubString(label, mCaseInsensitive, false, mCurrPos);
-		if (idx < 0) return false;
+		if (idx < 0)
+		{
+			return false;
+		}
 
 		int prev_pos = mCurrPos;
 		mCurrPos = idx + (int)label.length();
-		if (GetBlock(begintag, endtag, level)) return true;
+		if (GetBlock(begintag, endtag, level))
+		{
+			return true;
+		}
 		mCurrPos = prev_pos;
 		return false;
 	}
@@ -327,7 +354,10 @@ namespace gpvulc
 	bool TextParser::GetField(const std::string& separator)
 	{
 		int idx = mInputText.FindSubString(separator, mCaseInsensitive, false, mCurrPos);
-		if (idx < 0) return false;
+		if (idx < 0)
+		{
+			return false;
+		}
 		mResult = mInputText.GetSubString(mCurrPos, idx - 1);
 
 		SaveCurrPos();
@@ -346,7 +376,10 @@ namespace gpvulc
 	bool TextParser::GetLine()
 	{
 		int idx = mInputText.FindChar('\n', mCurrPos);
-		if (idx < 0) return GetRemainder();
+		if (idx < 0)
+		{
+			return GetRemainder();
+		}
 
 		mResult = mInputText.GetSubString(mCurrPos, idx - 1);
 		SaveCurrPos();
@@ -358,7 +391,10 @@ namespace gpvulc
 
 	bool TextParser::GetRemainder()
 	{
-		if (Complete()) return false;
+		if (Complete())
+		{
+			return false;
+		}
 		mResult = mInputText.GetSubString(mCurrPos);
 		SaveCurrPos();
 		mCurrPos = mInputText.Length();
@@ -369,7 +405,10 @@ namespace gpvulc
 
 	bool TextParser::GetToken(const std::string& sep)
 	{
-		if (Complete()) return false;
+		if (Complete())
+		{
+			return false;
+		}
 
 		std::string separators = sep;
 		if (sep.empty()) separators = mSeparators;
@@ -414,9 +453,15 @@ namespace gpvulc
 
 	bool TextParser::GoBeyond(const std::string& str)
 	{
-		if (str.empty()) return false;
+		if (str.empty())
+		{
+			return false;
+		}
 		int idx = mInputText.FindSubString(str, mCaseInsensitive, false, mCurrPos);
-		if (idx < 0) return false;
+		if (idx < 0)
+		{
+			return false;
+		}
 
 		mResult = mInputText.GetSubString(mCurrPos, idx + (int)str.length() - 1);
 		SaveCurrPos();
@@ -451,7 +496,10 @@ namespace gpvulc
 
 		mBuffer = mInputText.GetSubString(mCurrPos);
 		idx = mBuffer.FindFirstOf(reachstr, 0, mCaseInsensitive);
-		if (idx < 0) return false;
+		if (idx < 0)
+		{
+			return false;
+		}
 		if (idx == 0)
 		{
 			SaveCurrPos();
@@ -469,21 +517,27 @@ namespace gpvulc
 
 	bool TextParser::ReachLastOf(const std::string& reachstr)
 	{
-		if (mCurrPos==0) return false;
+		if (mCurrPos == 0)
+		{
+			return false;
+		}
 		int idx = 0;
 
-		idx = mInputText.FindLastOf(reachstr, mCurrPos-1, mCaseInsensitive);
-		if (idx < 0) return false;
-		if (idx == mCurrPos-1)
+		idx = mInputText.FindLastOf(reachstr, mCurrPos - 1, mCaseInsensitive);
+		if (idx < 0)
+		{
+			return false;
+		}
+		if (idx == mCurrPos - 1)
 		{
 			SaveCurrPos();
 			mResult = "";
 			return true;
 		}
-		int prevPos = mCurrPos-1;
+		int prevPos = mCurrPos - 1;
 		SaveCurrPos();
-		mCurrPos = idx+1;
-		mResult = mInputText.GetSubString(idx+1, prevPos);
+		mCurrPos = idx + 1;
+		mResult = mInputText.GetSubString(idx + 1, prevPos);
 
 		return true;
 	}
@@ -493,10 +547,16 @@ namespace gpvulc
 	{
 		int idx;
 
-		if (reachstr.empty()) return false;
+		if (reachstr.empty())
+		{
+			return false;
+		}
 
 		idx = mInputText.FindSubString(reachstr, mCaseInsensitive, false, mCurrPos);
-		if (idx < 0) return false;
+		if (idx < 0)
+		{
+			return false;
+		}
 		if (idx == 0) mResult.clear();
 		else mResult = mInputText.GetSubString(mCurrPos, idx - 1);
 		SaveCurrPos();
@@ -520,7 +580,10 @@ namespace gpvulc
 			if (idx < minpos) minpos = idx;
 		}
 
-		if (minpos > mInputText.Length()) return false;
+		if (minpos > mInputText.Length())
+		{
+			return false;
+		}
 		Forward(minpos - mCurrPos);
 
 		return true;
@@ -529,7 +592,10 @@ namespace gpvulc
 
 	bool TextParser::ReadText(std::istream& strm)
 	{
-		if (!strm.good()) return false;
+		if (!strm.good())
+		{
+			return false;
+		}
 
 		Init();
 		strm >> mInputText;
@@ -547,7 +613,10 @@ namespace gpvulc
 
 	bool TextParser::LoadFile(const std::string& filename)
 	{
-		if (filename.empty()) return false;
+		if (filename.empty())
+		{
+			return false;
+		}
 
 		Init();
 		mInputText.Clear();
@@ -557,7 +626,10 @@ namespace gpvulc
 
 	bool TextParser::SaveFile(const std::string& filename)
 	{
-		if (filename.empty()) return false;
+		if (filename.empty())
+		{
+			return false;
+		}
 
 		return mInputText.Save(filename);
 	}
@@ -611,7 +683,7 @@ namespace gpvulc
 		}
 		int posStart = std::min(mCurrPos, mBookmarks[name]);
 		int posEnd = std::max(mCurrPos, mBookmarks[name]);
-		mResult = mInputText.GetSubString(posStart, posEnd-1);
+		mResult = mInputText.GetSubString(posStart, posEnd - 1);
 		mCurrPos = mBookmarks[name];
 		return true;
 	}
@@ -623,14 +695,17 @@ namespace gpvulc
 		{
 			return "";
 		}
-		return GetSelection(mBookmarks.at(bookmarkStart),mBookmarks.at(bookmarkEnd));
+		return GetSelection(mBookmarks.at(bookmarkStart), mBookmarks.at(bookmarkEnd));
 	}
 
 
 	std::string TextParser::GetSelection(int posStart, int posEnd) const
 	{
-		if (posEnd - 1 <= posStart) return "";
-		return mInputText.GetSubString(posStart,posEnd-1);
+		if (posEnd - 1 <= posStart)
+		{
+			return "";
+		}
+		return mInputText.GetSubString(posStart, posEnd - 1);
 	}
 
 
@@ -650,7 +725,10 @@ namespace gpvulc
 
 	bool TextParser::Skip(const std::string& skipstr)
 	{
-		if (skipstr.empty()) return false;
+		if (skipstr.empty())
+		{
+			return false;
+		}
 		int pos = mInputText.FindFirstNotOf(skipstr, mCurrPos);
 		if (pos < 0)
 		{
@@ -673,7 +751,7 @@ namespace gpvulc
 
 	bool TextParser::ResultIs(const std::string& tag) const
 	{
-		if(mCaseInsensitive)
+		if (mCaseInsensitive)
 		{
 			TextBuffer temp = tag;
 			return temp.EqualTo(mResult, true);
@@ -684,7 +762,10 @@ namespace gpvulc
 
 	bool TextParser::Undo()
 	{
-		if (mUndoPos.empty()) return false;
+		if (mUndoPos.empty())
+		{
+			return false;
+		}
 		mCurrPos = mUndoPos.back();
 		mUndoPos.pop_back();
 		return true;
@@ -693,7 +774,13 @@ namespace gpvulc
 
 	bool TextParser::Undo(int times)
 	{
-		for (int i = 0; i < times; ++i) if (!Undo()) return false;
+		for (int i = 0; i < times; ++i)
+		{
+			if (!Undo())
+			{
+				return false;
+			}
+		}
 		return true;
 	}
 

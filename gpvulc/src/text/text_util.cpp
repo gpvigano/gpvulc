@@ -26,7 +26,10 @@ namespace gpvulc
 
 	void StrProperCase(std::string& str)
 	{
-		if (str.empty()) return;
+		if (str.empty())
+		{
+			return;
+		}
 		bool capital = true;
 		size_t len = str.length();
 
@@ -45,7 +48,10 @@ namespace gpvulc
 
 	void StrSentenceCase(std::string& str)
 	{
-		if (str.empty()) return;
+		if (str.empty())
+		{
+			return;
+		}
 
 		size_t len = str.length();
 		size_t i = 0;
@@ -65,7 +71,10 @@ namespace gpvulc
 
 	void IndentStr(std::string& str, size_t n, char c)
 	{
-		if (str.empty()) return;
+		if (str.empty())
+		{
+			return;
+		}
 		std::string indstr(n, c);
 		size_t pos = 0;
 		while (pos != std::string::npos)
@@ -129,7 +138,10 @@ namespace gpvulc
 
 	bool GetToken(const std::string& inputText, size_t& currPos, std::string& result, const std::string& sep)
 	{
-		if (currPos >= inputText.length()) return false;
+		if (currPos >= inputText.length())
+		{
+			return false;
+		}
 		size_t len = 0;
 		size_t sepstart, toklen, sepend;
 		std::string separators = sep;

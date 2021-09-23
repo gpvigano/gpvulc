@@ -28,25 +28,25 @@
 //#ifdef _WIN32 && !defined(__CYGWIN__)
 #ifdef _MSC_VER
 
-	#include <io.h>
-	#include <direct.h>
-	#include <sys/types.h>
-	#include <sys/stat.h>
-	#include <Shlobj.h> // SHCreateDirectoryEx
-	#define chdir _chdir
-	#define getcwd _getcwd
-	#define mkdir(x,y) _mkdir((x))
-	#define stat64 _stati64
+#include <io.h>
+#include <direct.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <Shlobj.h> // SHCreateDirectoryEx
+#define chdir _chdir
+#define getcwd _getcwd
+#define mkdir(x,y) _mkdir((x))
+#define stat64 _stati64
 
-	#ifndef F_OK
-	#define F_OK 4
-	#endif
+#ifndef F_OK
+#define F_OK 4
+#endif
 
 #else
-	#include <unistd.h>
-	#include <dirent.h>
+#include <unistd.h>
+#include <dirent.h>
 
-	#define stat64 stat
+#define stat64 stat
 #endif
 
 #include <sys/utime.h>
@@ -237,9 +237,15 @@ namespace gpvulc
 	bool FileObject::Readable()
 	{
 		GetFullPath();
-		if (mFullPath.empty()) return false;
-		std::ifstream fileStream(mFullPath,std::ios::in);
-		if (fileStream.fail()) return false;
+		if (mFullPath.empty())
+		{
+			return false;
+		}
+		std::ifstream fileStream(mFullPath, std::ios::in);
+		if (fileStream.fail())
+		{
+			return false;
+		}
 		fileStream.close();
 		return true;
 	}
@@ -248,16 +254,25 @@ namespace gpvulc
 	FILE* FileObject::Open(const std::string& mode)
 	{
 		GetFullPath();
-		if (mFullPath.empty()) return nullptr;
+		if (mFullPath.empty())
+		{
+			return nullptr;
+		}
 		FILE* fp = fopen(mFullPath.c_str(), mode.c_str());
-		if (!fp) return nullptr;
+		if (!fp)
+		{
+			return nullptr;
+		}
 		return fp;
 	}
 
 
 	bool FileObject::CheckDirectoryAttr()
 	{
-		if (!mAttribUpdated && !ReadAttributes()) return false;
+		if (!mAttribUpdated && !ReadAttributes())
+		{
+			return false;
+		}
 		return mIsDir;
 	}
 
@@ -311,7 +326,7 @@ namespace gpvulc
 			dt.Minute = tmDt.tm_min;
 			dt.Second = tmDt.tm_sec;
 			//dt.TimeOffsetHour = tmDt.tm_isdst ? 1 : 0;
-			dt.IsDST = tmDt.tm_isdst!=0;
+			dt.IsDST = tmDt.tm_isdst != 0;
 		};
 
 #ifdef _MSC_VER
@@ -335,8 +350,14 @@ namespace gpvulc
 
 	long long FileObject::GetSize()
 	{
-		if (Size >= 0L) return Size;
-		if (!ReadAttributes()) return -1L;
+		if (Size >= 0L)
+		{
+			return Size;
+		}
+		if (!ReadAttributes())
+		{
+			return -1L;
+		}
 
 		return Size;
 	}
@@ -344,21 +365,30 @@ namespace gpvulc
 
 	DateTime FileObject::GetCreationTime()
 	{
-		if (!CreationTime.Valid()) ReadDateTime();
+		if (!CreationTime.Valid())
+		{
+			ReadDateTime();
+		}
 		return CreationTime;
 	}
 
 
 	DateTime FileObject::GetAccessTime()
 	{
-		if (!AccessTime.Valid()) ReadDateTime();
+		if (!AccessTime.Valid())
+		{
+			ReadDateTime();
+		}
 		return AccessTime;
 	}
 
 
 	DateTime FileObject::GetWriteTime()
 	{
-		if (!WriteTime.Valid()) ReadDateTime();
+		if (!WriteTime.Valid())
+		{
+			ReadDateTime();
+		}
 		return WriteTime;
 	}
 
@@ -424,7 +454,7 @@ namespace gpvulc
 		FILETIME creation_time_local, access_time_local, write_time_local;
 
 		SYSTEMTIME datetime;
-		DateTimeToSystemTime(creationTime,datetime);
+		DateTimeToSystemTime(creationTime, datetime);
 		if (!SystemTimeToFileTime(&datetime, &creation_time_local))
 		{
 			if (error_str)
@@ -527,11 +557,17 @@ namespace gpvulc
 	bool FileObject::SetBuffer(char* buf, int size, bool copy)
 	{
 		FreeBuffer();
-		if (buf == nullptr || size <= 0) return false;
+		if (buf == nullptr || size <= 0)
+		{
+			return false;
+		}
 		if (copy)
 		{
 			char* tmp = new(std::nothrow) char[size];
-			if (tmp == nullptr) return false;
+			if (tmp == nullptr)
+			{
+				return false;
+			}
 			Buffer = tmp;
 			BufferSize = size;
 			memcpy((void*)Buffer, (void*)buf, size);
@@ -549,15 +585,24 @@ namespace gpvulc
 	bool FileObject::ReadBuffer()
 	{
 		GetFullPath();
-		if (mFullPath.empty()) return false;
+		if (mFullPath.empty())
+		{
+			return false;
+		}
 		FILE* fp = fopen(mFullPath.c_str(), "rb");
-		if (!fp) return false;
+		if (!fp)
+		{
+			return false;
+		}
 
 		fseek(fp, 0, SEEK_END);
 		BufferSize = ftell(fp);
 		fseek(fp, 0, SEEK_SET);
 		char* tmp = new(std::nothrow) char[BufferSize];
-		if (tmp == nullptr) return false;
+		if (tmp == nullptr)
+		{
+			return false;
+		}
 		Buffer = tmp;
 		fread(Buffer, 1, BufferSize, fp);
 		fclose(fp);
@@ -568,11 +613,20 @@ namespace gpvulc
 
 	bool FileObject::WriteBuffer()
 	{
-		if (!Buffer) return false;
+		if (!Buffer)
+		{
+			return false;
+		}
 		GetFullPath();
-		if (mFullPath.empty()) return false;
+		if (mFullPath.empty())
+		{
+			return false;
+		}
 		FILE* fp = fopen(mFullPath.c_str(), "wb");
-		if (!fp) return false;
+		if (!fp)
+		{
+			return false;
+		}
 		fwrite(Buffer, 1, BufferSize, fp);
 
 		fclose(fp);
@@ -629,7 +683,10 @@ namespace gpvulc
 
 	DirObject* DirObject::GetRoot()
 	{
-		if (ParentDirectory) return ParentDirectory->GetRoot();
+		if (ParentDirectory)
+		{
+			return ParentDirectory->GetRoot();
+		}
 		return this;
 	}
 
@@ -637,7 +694,10 @@ namespace gpvulc
 	bool DirObject::ReadDir(const std::string& dir)
 	{
 		std::string dirname(dir.empty() ? mDirPath.GetPath() : dir);
-		if (dirname.empty()) return false;
+		if (dirname.empty())
+		{
+			return false;
+		}
 		// fix slash characters
 		FixTextSlashes(dirname);
 		Reset();
@@ -719,7 +779,12 @@ namespace gpvulc
 		bool result = ReadDir(mDirPath.GetFullPath());
 		size_t i;
 		for (i = 0; i < SubDirectory.size(); i++)
-			if (!SubDirectory[i]->ReadTree("")) result = false;
+		{
+			if (!SubDirectory[i]->ReadTree(""))
+			{
+				result = false;
+			}
+		}
 
 		return result;
 	}
@@ -774,9 +839,15 @@ namespace gpvulc
 	void DirObject::GetFileList(std::vector< FileObject >& list)
 	{
 		size_t i;
-		for (i = 0; i < SubDirectory.size(); ++i) SubDirectory[i]->GetFileList(list);
+		for (i = 0; i < SubDirectory.size(); ++i)
+		{
+			SubDirectory[i]->GetFileList(list);
+		}
 
-		for (i = 0; i < File.size(); i++) list.push_back(*(File[i]));
+		for (i = 0; i < File.size(); i++)
+		{
+			list.push_back(*(File[i]));
+		}
 	}
 
 
@@ -843,7 +914,10 @@ namespace gpvulc
 
 	std::string DirObject::FindFile(const std::string& filename)
 	{
-		if (filename.empty()) return nullptr;
+		if (filename.empty())
+		{
+			return nullptr;
+		}
 
 #ifdef _WIN32
 		const bool caseInsensitive = true;
@@ -861,7 +935,10 @@ namespace gpvulc
 
 	std::string DirObject::FindSubDir(const std::string& dirname)
 	{
-		if (dirname.empty()) return nullptr;
+		if (dirname.empty())
+		{
+			return nullptr;
+		}
 
 #ifdef _WIN32
 		const bool caseInsensitive = true;
@@ -882,7 +959,10 @@ namespace gpvulc
 
 	DirObject* DirObject::GetSubDir(const std::string& dirname)
 	{
-		if (dirname.empty()) return nullptr;
+		if (dirname.empty())
+		{
+			return nullptr;
+		}
 
 #ifdef _WIN32
 		const bool caseInsensitive = true;
@@ -903,16 +983,25 @@ namespace gpvulc
 
 	std::string DirObject::FindFilePath(const std::string& filename)
 	{
-		if (filename.empty()) return nullptr;
+		if (filename.empty())
+		{
+			return nullptr;
+		}
 
 		std::string found = FindFile(filename);
-		if (!found.empty()) return found;
+		if (!found.empty())
+		{
+			return found;
+		}
 
 		size_t i;
 		for (i = 0; i < SubDirectory.size(); i++)
 		{
 			found = SubDirectory[i]->FindFilePath(filename);
-			if (!found.empty()) return found;
+			if (!found.empty())
+			{
+				return found;
+			}
 		}
 		return std::string();
 	}
@@ -992,10 +1081,16 @@ namespace gpvulc
 
 	bool FileDelete(const std::string& filename, bool allowUndo)
 	{
-		if (filename.empty()) return false;
+		if (filename.empty())
+		{
+			return false;
+		}
 
 #ifdef SHFileOperation
-		if (!allowUndo) return DeleteFile(filename.c_str()) == TRUE;
+		if (!allowUndo)
+		{
+			return DeleteFile(filename.c_str()) == TRUE;
+		}
 
 		char pathbuf[_MAX_PATH] = { 0 };
 		strcpy(pathbuf, filename.c_str());
@@ -1037,7 +1132,10 @@ namespace gpvulc
 
 	bool FileDelete(const std::vector<std::string>& paths, bool allowUndo)
 	{
-		if (!paths.size() == 0) return false;
+		if (!paths.size() == 0)
+		{
+			return false;
+		}
 #ifdef SHFileOperation
 		std::string path_list = ConvertPathList(paths);
 
@@ -1255,12 +1353,18 @@ namespace gpvulc
 
 		SHFILEOPSTRUCT shfo;
 		shfo.hwnd = GetActiveWindow();
-		if (shfo.hwnd == nullptr) shfo.hwnd = GetDesktopWindow();
+		if (shfo.hwnd == nullptr)
+		{
+			shfo.hwnd = GetDesktopWindow();
+		}
 		shfo.wFunc = FO_COPY;
 		shfo.pFrom = src_path_list.c_str();
 		shfo.pTo = dst_path_list.c_str();
 		shfo.fFlags = FOF_NOCONFIRMATION | FOF_NOCONFIRMMKDIR | FOF_MULTIDESTFILES | FOF_NOERRORUI;
-		if (allowUndo) shfo.fFlags |= FOF_ALLOWUNDO;
+		if (allowUndo)
+		{
+			shfo.fFlags |= FOF_ALLOWUNDO;
+		}
 
 		int err = SHFileOperation(&shfo);
 
@@ -1290,17 +1394,29 @@ namespace gpvulc
 
 		FILETIME filetime1;
 		HANDLE h1 = CreateFile(path1.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-		if (h1 == INVALID_HANDLE_VALUE) return -1;
+		if (h1 == INVALID_HANDLE_VALUE)
+		{
+			return -1;
+		}
 		result = (GetFileTime(h1, nullptr, nullptr, &filetime1) == TRUE);
 		CloseHandle(h1);
-		if (!result) return -1;
+		if (!result)
+		{
+			return -1;
+		}
 
 		FILETIME filetime2;
 		HANDLE h2 = CreateFile(path2.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-		if (h2 == INVALID_HANDLE_VALUE) return -1;
+		if (h2 == INVALID_HANDLE_VALUE)
+		{
+			return -1;
+		}
 		result = (GetFileTime(h2, nullptr, nullptr, &filetime2) == TRUE);
 		CloseHandle(h2);
-		if (!result) return -1;
+		if (!result)
+		{
+			return -1;
+		}
 
 		LONG comparison = CompareFileTime(&filetime1, &filetime2);
 		switch (comparison)
@@ -1372,17 +1488,23 @@ namespace gpvulc
 	{
 		inline bool _FileBackupRestore(const std::string& filename, bool restore)
 		{
-			if (filename.empty()) return false;
+			if (filename.empty())
+			{
+				return false;
+			}
 
 			PathInfo orig_file(filename);  // original file
 			PathInfo new_file(filename);   // backup file
 			new_file.SetExt("~", new_file.GetExt());
 #ifdef CopyFile
-			if (restore) return CopyFile(
-				new_file.GetFullPath().c_str(), // pointer to filename to copy to
-				orig_file.GetFullPath().c_str(),  // pointer to name of an existing file
-				FALSE   // flag for operation if file exists
-				) == TRUE;
+			if (restore)
+			{
+				return CopyFile(
+					new_file.GetFullPath().c_str(), // pointer to filename to copy to
+					orig_file.GetFullPath().c_str(),  // pointer to name of an existing file
+					FALSE   // flag for operation if file exists
+					) == TRUE;
+			}
 
 			return CopyFile(
 				orig_file.GetFullPath().c_str(),
@@ -1398,12 +1520,12 @@ namespace gpvulc
 			else
 			{
 				filesystem::copy_file(orig_file.GetFullPath(), new_file.GetFullPath(), filesystem::copy_option::overwrite_if_exists, ec);
-		}
+			}
 			return !ec.failed();
 #endif
 
+		}
 	}
-}
 
 	bool FileBackup(const std::string& filename)
 	{
@@ -1451,7 +1573,7 @@ namespace gpvulc
 		mkdir(path.GetPath().c_str(), 0755);
 		return false;
 #endif
-		}
+	}
 
 
 	std::string GetCurrDir()
@@ -1466,15 +1588,24 @@ namespace gpvulc
 
 	bool ChangeCurrDir(const std::string& path_name)
 	{
-		if (path_name.empty()) return false;
-		if (chdir(path_name.c_str())) return false;
+		if (path_name.empty())
+		{
+			return false;
+		}
+		if (chdir(path_name.c_str()))
+		{
+			return false;
+		}
 		return true;
 	}
 
 
 	bool ChangeCurrDirToFilePath(const std::string& path_name)
 	{
-		if (path_name.empty()) return false;
+		if (path_name.empty())
+		{
+			return false;
+		}
 		PathInfo exeinfo(path_name);
 		exeinfo.ChangeToAbsPathFromCurrDir();
 		return ChangeCurrDir(exeinfo.GetPath());
@@ -1499,11 +1630,17 @@ namespace gpvulc
 	{
 #ifdef GetDriveType
 		drive_letter = toupper(drive_letter);
-		if (drive_letter<'A' || drive_letter>'Z') return false;
+		if (drive_letter<'A' || drive_letter>'Z')
+		{
+			return false;
+		}
 		DWORD drives = GetLogicalDrives();
 		unsigned int currdrive = drive_letter - 'A';
 
-		if ((drives&(0x01 << currdrive)) == 0) return false;
+		if ((drives&(0x01 << currdrive)) == 0)
+		{
+			return false;
+		}
 
 		//UINT errmode = GetErrorMode();
 		SetErrorMode(SEM_FAILCRITICALERRORS);
@@ -1558,14 +1695,26 @@ namespace gpvulc
 		long size1MB = size1KB*size1KB;
 		long size1GB = size1MB*size1KB;
 		long size1TB = size1GB*size1KB;
-		if (sizeInBytes < size1KB) return std::to_string(sizeInBytes) + " B";
-		if (sizeInBytes < size1MB) return NumberToString(sizeDouble / size1KB, 0, precision, false) + " KB";
-		if (sizeInBytes < size1GB) return NumberToString(sizeDouble / size1MB, 0, precision, false) + " MB";
-		if (sizeInBytes < size1TB) return NumberToString(sizeDouble / size1GB, 0, precision, false) + " GB";
+		if (sizeInBytes < size1KB)
+		{
+			return std::to_string(sizeInBytes) + " B";
+		}
+		if (sizeInBytes < size1MB)
+		{
+			return NumberToString(sizeDouble / size1KB, 0, precision, false) + " KB";
+		}
+		if (sizeInBytes < size1GB)
+		{
+			return NumberToString(sizeDouble / size1MB, 0, precision, false) + " MB";
+		}
+		if (sizeInBytes < size1TB)
+		{
+			return NumberToString(sizeDouble / size1GB, 0, precision, false) + " GB";
+		}
 		return NumberToString(sizeDouble / size1GB, 0, precision, false) + " TB";
 	}
 
-	} // namespace gpvulc
+} // namespace gpvulc
 
 #ifdef _MSC_VER
 #pragma warning( pop )

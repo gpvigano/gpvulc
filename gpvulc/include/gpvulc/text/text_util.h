@@ -95,7 +95,10 @@ namespace gpvulc
 	//! Check equality between two strings, optionally ignoring case
 	inline bool StrEqual(const std::string& str1, const std::string& str2, bool case_insensitive = false)
 	{
-		if (case_insensitive) return GetLowerStr(str1) == GetLowerStr(str2);
+		if (case_insensitive)
+		{
+			return GetLowerStr(str1) == GetLowerStr(str2);
+		}
 		return str1 == str2;
 	}
 
