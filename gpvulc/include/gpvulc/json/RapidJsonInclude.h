@@ -14,7 +14,7 @@
 
 
 #define RAPIDJSON_ASSERT(x) \
-	if(!(x)) { throw gpvulc::json::FormatException(); }
+	if (!(x)) { throw gpvulc::json::FormatException(#x); }
 
 #define RAPIDJSON_PARSE_ERROR_NORETURN(parseErrorCode,offset) \
     throw gpvulc::json::ParseException(parseErrorCode, #parseErrorCode, offset)
@@ -28,6 +28,9 @@ namespace gpvulc
 {
 	namespace json
 	{
+		/*!
+		Exception thrown when parsing data.
+		*/
 		struct ParseException : std::runtime_error, rapidjson::ParseResult
 		{
 			ParseException(rapidjson::ParseErrorCode code, const char* msg, size_t offset)
@@ -35,11 +38,25 @@ namespace gpvulc
 		};
 
 
+		/*!
+		Exception thrown if the JSON document has a wrong format.
+		*/
 		struct FormatException : std::runtime_error
 		{
 			FormatException()
-				: std::runtime_error("JSON format exception") {}
+				: std::runtime_error("invalid JSON") {}
 			FormatException(const char* description)
+				: std::runtime_error(description) {}
+		};
+
+		/*!
+		Exception thrown when the content is wrong.
+		*/
+		struct ContentException : std::runtime_error
+		{
+			ContentException()
+				: std::runtime_error("invalid JSON content") {}
+			ContentException(const char* description)
 				: std::runtime_error(description) {}
 		};
 

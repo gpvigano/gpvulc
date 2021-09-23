@@ -35,7 +35,11 @@ namespace gpvulc
 			//! The requested member is not an array.
 			NOT_ARRAY,
 			//! The requested member has a dangling reference.
-			DANGLING_REFERENCE
+			DANGLING_REFERENCE,
+			//! The requested member has an invalid value.
+			INVALID_VALUE,
+			//! An unhandled exception was thrown.
+			UNHANDLED_EXCEPTION,
 		};
 
 		//! Error information record
@@ -66,6 +70,10 @@ namespace gpvulc
 				return "Not an array";
 			case ErrorType::DANGLING_REFERENCE:
 				return "Dangling reference in ";
+			case ErrorType::INVALID_VALUE:
+				return "Invalid value for ";
+			case ErrorType::UNHANDLED_EXCEPTION:
+				return "Unhandled exception: ";
 				//default:
 				//	return "Unknown error ";
 			}

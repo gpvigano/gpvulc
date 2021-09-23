@@ -27,6 +27,7 @@ namespace gpvulc
 		void RapidJsonWriter::ResetDocument()
 		{
 			Buffer.Clear();
+			Writer.Reset(Buffer);
 		}
 
 

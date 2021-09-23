@@ -37,7 +37,7 @@ namespace gpvulc
 			if (!DocumentBuffer.HasMember(name))
 			{
 				AddJsonError(ErrorType::MISSING_ROOT, name);
-				throw FormatException(GetJsonErrorSummary(true));
+				throw ContentException(GetJsonErrorSummary(true));
 			}
 
 			return DocumentBuffer[name];
@@ -96,6 +96,11 @@ namespace gpvulc
 
 		bool RapidJsonParser::CheckHasMember(const rapidjson::Value& val, const char* name, bool optional)
 		{
+			if (!val.IsObject())
+			{
+				AddJsonError(ErrorType::NOT_OBJECT);
+				return "";
+			}
 			if (!val.HasMember(name))
 			{
 				if (!optional)
@@ -113,6 +118,11 @@ namespace gpvulc
 			const std::vector<const char*>& membersNames
 			)
 		{
+			if (!val.IsObject())
+			{
+				AddJsonError(ErrorType::NOT_OBJECT);
+				return false;
+			}
 			bool missing = false;
 			for (const char* memberName : membersNames)
 			{
@@ -154,6 +164,11 @@ namespace gpvulc
 			bool optional
 			)
 		{
+			if (!val.IsObject())
+			{
+				AddJsonError(ErrorType::NOT_OBJECT);
+				return "";
+			}
 			if (!val.HasMember(name))
 			{
 				if (!optional)
@@ -178,6 +193,11 @@ namespace gpvulc
 			int defaultValue
 			)
 		{
+			if (!val.IsObject())
+			{
+				AddJsonError(ErrorType::NOT_OBJECT);
+				return defaultValue;
+			}
 			if (!val.HasMember(name))
 			{
 				if (!optional)
@@ -197,6 +217,11 @@ namespace gpvulc
 
 		bool RapidJsonParser::GetAsBool(const rapidjson::Value& val, const char* name, bool optional, bool defaultValue)
 		{
+			if (!val.IsObject())
+			{
+				AddJsonError(ErrorType::NOT_OBJECT);
+				return "";
+			}
 			if (!val.HasMember(name))
 			{
 				if (!optional)
@@ -221,6 +246,11 @@ namespace gpvulc
 			float defaultValue
 			)
 		{
+			if (!val.IsObject())
+			{
+				AddJsonError(ErrorType::NOT_OBJECT);
+				return defaultValue;
+			}
 			if (!val.HasMember(name))
 			{
 				if (!optional)
@@ -271,7 +301,7 @@ namespace gpvulc
 		{
 			if (ErrorsOccurred())
 			{
-				throw FormatException(GetJsonErrorSummary(true));
+				throw ContentException(GetJsonErrorSummary(true));
 			}
 		}
 	}
