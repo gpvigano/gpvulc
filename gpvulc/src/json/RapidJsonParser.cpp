@@ -158,6 +158,50 @@ namespace gpvulc
 		}
 
 
+		const char* RapidJsonParser::GetString(const rapidjson::Value& val, const char* context)
+		{
+			if (!val.IsString())
+			{
+				AddJsonError(ErrorType::WRONG_TYPE, context);
+				return "";
+			}
+			return val.GetString();
+		}
+
+
+		int RapidJsonParser::GetInt(const rapidjson::Value& val, const char * context)
+		{
+			if (!val.IsInt())
+			{
+				AddJsonError(ErrorType::WRONG_TYPE, context);
+				return 0;
+			}
+			return val.GetInt();
+		}
+
+
+		bool RapidJsonParser::GetBool(const rapidjson::Value& val, const char * context)
+		{
+			if (!val.IsBool())
+			{
+				AddJsonError(ErrorType::WRONG_TYPE, context);
+				return false;
+			}
+			return val.GetBool();
+		}
+
+
+		float RapidJsonParser::GetFloat(const rapidjson::Value& val, const char * context)
+		{
+			if (!val.IsFloat())
+			{
+				AddJsonError(ErrorType::WRONG_TYPE, context);
+				return 0;
+			}
+			return val.GetFloat();
+		}
+
+
 		const char* RapidJsonParser::GetAsString(
 			const rapidjson::Value& val,
 			const char* name,

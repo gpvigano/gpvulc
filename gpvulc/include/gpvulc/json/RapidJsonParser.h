@@ -159,9 +159,29 @@ namespace gpvulc
 				return CheckHasMember(val, name, optional) &&CheckIsArray(val[name]);
 			}
 
+			/// @note An optional context can be provided for these methods,
+			/// used for error messages if available.
+			/// @name Getters
+			/// @{
+
+			//! Get the given Value as a string ().
+			const char* GetString(const rapidjson::Value& val, const char* context = "");
+
+			//! Get the given Value as an integer value (an optional context can be provided for error messages).
+			int GetInt(const rapidjson::Value& val, const char* context = "");
+
+			//! Get the given Value as a boolean value (an optional context can be provided for error messages).
+			bool GetBool(const rapidjson::Value& val, const char* context = "");
+
+			//! Get the given Value as a floating point value (an optional context can be provided for error messages).
+			float GetFloat(const rapidjson::Value& val, const char* context = "");
+
+			/// @}
+
+			/// Member Getters
 			/// @note if @c optional parameter is false (default) and the member is missing
 			/// or it is of a different type an error is registered.
-			/// @name Getters
+			/// @name MemberGetters
 			/// @{
 
 			//! Get the named member of the given Value as a string.
