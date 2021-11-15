@@ -18,6 +18,7 @@
 
 #include <utility>
 #include <algorithm>
+#include <sstream>
 
 namespace gpvulc
 {

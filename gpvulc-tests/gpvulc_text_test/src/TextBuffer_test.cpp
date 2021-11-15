@@ -21,7 +21,7 @@ using namespace gpvulc;
 #include <gtest/gtest.h>
 
 
-// Tests operator[]()
+// Tests constructors
 TEST(TextBufferTest, ConstructorsSet)
 {
 	EXPECT_EQ(TextBuffer(), "");
@@ -35,13 +35,21 @@ TEST(TextBufferTest, ConstructorsSet)
 	EXPECT_EQ(TextBuffer("abc"), "abc");
 	EXPECT_EQ(TextBuffer("abcde", 3), "abc");
 	EXPECT_EQ(TextBuffer(TextBuffer("abc")), "abc");
-#ifdef _WIN64
+
+#if defined(_MSC_VER)
+#if defined(_WIN64)
 	EXPECT_EQ(TextBuffer((void*)(0xAABBCCDDULL)), "00000000AABBCCDD");
 	EXPECT_EQ(TextBuffer((const void*)(0xAABBCCDDULL)), "00000000AABBCCDD");
 #else
 	EXPECT_EQ(TextBuffer((void*)(0xAABBCCDD)), "AABBCCDD");
 	EXPECT_EQ(TextBuffer((const void*)(0xAABBCCDD)), "AABBCCDD");
 #endif // _WIN64
+#endif // _MSC_VER
+
+#if defined(__GNUC__)
+	EXPECT_EQ(TextBuffer((void*)(0xAABBCCDD)), "0xaabbccdd");
+	EXPECT_EQ(TextBuffer((const void*)(0xAABBCCDD)), "0xaabbccdd");
+#endif // __GNUC__
 
 }
 
@@ -66,11 +74,16 @@ TEST(TextBufferTest, Cat)
 	EXPECT_EQ(txt.Cat('G'), "ABCFFG");
 	EXPECT_EQ(txt.Cat(std::string("aa")), "ABCFFGaa");
 	txt.Clear();
-#ifdef _WIN64
+#if defined(_MSC_VER)
+#if defined(_WIN64)
 	EXPECT_EQ(txt.Cat((void*)0xAABBCCDDULL), "00000000AABBCCDD");
 #else
 	EXPECT_EQ(txt.Cat((void*)0xAABBCCDD), "AABBCCDD");
 #endif // _WIN64
+#endif // _MSC_VER
+#if defined(__GNUC__)
+	EXPECT_EQ(txt.Cat((void*)0xAABBCCDD), "0xaabbccdd");
+#endif // __GNUC__
 	txt.Clear();
 	EXPECT_EQ(txt.Cat(1, 2, true), "01");
 	EXPECT_EQ(txt.Cat((short)2, 2, false), "01 2");
@@ -112,7 +125,7 @@ int main( int argc, char* argv[] )\n\
 	EXPECT_TRUE(success);
 }
 
-// Tests operator+() (and constructors and Set() methods).
+// Tests operator+() (and constructors).
 TEST(TextBufferTest, PlusAndConstructors)
 {
 	EXPECT_EQ(TextBuffer("a") + TextBuffer("b"), "ab");
@@ -121,14 +134,16 @@ TEST(TextBufferTest, PlusAndConstructors)
 	EXPECT_EQ(TextBuffer("a") + 1, "a1");
 	EXPECT_EQ(1.2 + TextBuffer("a"), "1.2a");
 	EXPECT_EQ(3.4f + TextBuffer("a"), "3.4a");
-#ifdef _WIN64
+#if defined(_MSC_VER)
+#if defined(_WIN64)
 	EXPECT_EQ((void*)(0x052ED40A) + TextBuffer("b"), "00000000052ED40Ab");
 #else
 	EXPECT_EQ((void*)(0x052ED40A) + TextBuffer("b"), "052ED40Ab");
 #endif // _WIN64
+#endif // _MSC_VER
 }
 
-// Tests operator+=() (and constructors and Set() methods).
+// Tests operator+=() (and constructors).
 TEST(TextBufferTest, PlusEqAndConstrCat)
 {
 	TextBuffer txt("A");
@@ -170,7 +185,7 @@ TEST(TextBufferTest, CompareEqual)
 	EXPECT_FALSE(TextBuffer() < (const char*)NULL);
 }
 
-// Tests conversion to number
+// Tests conversion to numbers
 TEST(TextBufferTest, GetNum)
 {
 	EXPECT_EQ(TextBuffer("1.0").GetDouble(), 1.0);
@@ -180,7 +195,7 @@ TEST(TextBufferTest, GetNum)
 	EXPECT_EQ(TextBuffer("1.0").GetInt(), 1);
 	EXPECT_EQ(TextBuffer("-2").GetInt(0), -2);
 	EXPECT_EQ(TextBuffer("FF").GetInt(0), 0);
-	EXPECT_EQ(TextBuffer("FF").GetHex(0), 255);
+	EXPECT_EQ(TextBuffer("FF").GetHex(0), 255U);
 }
 
 // Tests operator[]()
@@ -267,13 +282,15 @@ TEST(TextBufferTest, Manipulation)
 	EXPECT_EQ(TextBuffer("Abc").InsertChar(1, ':', 2), "A::bc");
 
 	// test robustness
-#ifdef _WIN64
+#ifdef _MSC_VER
+#if defined(_WIN64)
 	EXPECT_EQ(TextBuffer((const void*)nullptr), "0000000000000000");
 #else
 	EXPECT_EQ(TextBuffer((const void*)nullptr), "00000000");
 #endif // _WIN64
 	EXPECT_EQ(TextBuffer((const char*)nullptr), "");
 	EXPECT_EQ(TextBuffer(NULL), "0");//,"");
+#endif // _MSC_VER
 	//EXPECT_NO_THROW(TextBuffer("Abc").Crop(NULL));
 	EXPECT_EQ(TextBuffer("Abc").Crop(""), "Abc");
 	EXPECT_EQ(TextBuffer("Abc").SubString(-1, -1), "Abc");

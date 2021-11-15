@@ -28,7 +28,7 @@ namespace gpvulc
 	Text buffer based on a standard C++ string.
 	This class embeds a standard C++ string and provides some
 	basic editing functions.
-	Some methods can be called with a case_insensitive flag: if true this
+	Some methods can be called with a caseInsensitive flag: if true this
 	means that search and comparison operations will be performed ignoring
 	string upper or lower case.
 	*/
@@ -105,6 +105,7 @@ namespace gpvulc
 		TextBuffer& Set(unsigned int n, int digits = 0, bool zeroes = false);
 		TextBuffer& Set(float f, int width = 0, int ndecimals = -1, bool zeroes = false);
 		TextBuffer& Set(double d, int width = 0, int ndecimals = -1, bool zeroes = false);
+		TextBuffer& Set(long n);
 		TextBuffer& Set(long long n);
 		TextBuffer& Set(long double n) { mStdString = std::to_string(n); return *this; }
 		TextBuffer& Set(unsigned long long n) { mStdString = std::to_string(n); return *this; }
@@ -200,11 +201,11 @@ namespace gpvulc
 		/// @name Comparison
 		//@{
 
-		int Compare(const char* str, bool case_insensitive = false) const { return str ? Compare(std::string(str), case_insensitive) : (mStdString.empty() ? 0 : 1); }
-		int Compare(const std::string& str, bool case_insensitive = false) const;
+		int Compare(const char* str, bool caseInsensitive = false) const { return str ? Compare(std::string(str), caseInsensitive) : (mStdString.empty() ? 0 : 1); }
+		int Compare(const std::string& str, bool caseInsensitive = false) const;
 
-		bool EqualTo(const char* str, bool case_insensitive = false) const { return Compare(str, case_insensitive) == 0; }
-		bool EqualTo(const std::string& str, bool case_insensitive = false) const { return Compare(str, case_insensitive) == 0; }
+		bool EqualTo(const char* str, bool caseInsensitive = false) const { return Compare(str, caseInsensitive) == 0; }
+		bool EqualTo(const std::string& str, bool caseInsensitive = false) const { return Compare(str, caseInsensitive) == 0; }
 
 		//@}
 
@@ -240,24 +241,24 @@ namespace gpvulc
 
 
 		//! Test if the string begins with the given string.
-		bool StartsWith(const std::string& str, bool case_insensitive = false) const;
+		bool StartsWith(const std::string& str, bool caseInsensitive = false) const;
 
 
 		//! Test if the string begins with the given string, if true cut off that string.
-		bool StartsWithThenCut(const std::string& str, bool case_insensitive = false);
+		bool StartsWithThenCut(const std::string& str, bool caseInsensitive = false);
 
 
 		//! Test if the string ends with the given string.
-		bool EndsWith(const std::string& str, bool case_insensitive = false) const;
+		bool EndsWith(const std::string& str, bool caseInsensitive = false) const;
 
 
 		/*!
 		 Test if the string contains the given string at the given position.
 		 @param str Search string
 		 @param beg Begin to search from this position
-		 @param case_insensitive Perform a case-insensitive search
+		 @param caseInsensitive Perform a case-insensitive search
 		*/
-		bool MiddleStr(const std::string& str, int beg, bool case_insensitive = false) const;
+		bool MiddleStr(const std::string& str, int beg, bool caseInsensitive = false) const;
 
 		//@}
 
@@ -408,93 +409,93 @@ namespace gpvulc
 		 Replace all the occurrences of the given character with the given one.
 		 @param oldchar character to be replaced
 		 @param newchar character to replace
-		 @param case_insensitive Perform a case-insensitive search (default=false)
+		 @param caseInsensitive Perform a case-insensitive search (default=false)
 		 @param startpos start searchin at this position (default=0)
 		 @param endpos end searching at this position (default=0)
 		 @return The number of the replaced characters or 0 if not found.
 		*/
 		int ReplaceChar(char oldchar, char newchar,
-			bool case_insensitive = false, int startpos = 0, int endpos = -1);
+			bool caseInsensitive = false, int startpos = 0, int endpos = -1);
 
 		/*!
 		 Replace a substring (if present) with the given string.
 		 @param substr string to be replaced
 		 @param str string to replace
-		 @param case_insensitive Perform a case-insensitive search (default=false)
+		 @param caseInsensitive Perform a case-insensitive search (default=false)
 		 @param words_only match whole words only (default=false)
 		 @param startpos start searching at this position (default=0)
 		 @return The index of the replaced string or -1 if not found.
 		*/
 		int Replace(const std::string& substr, const std::string& str,
-			bool case_insensitive = false, bool words_only = false, int startpos = 0);
+			bool caseInsensitive = false, bool words_only = false, int startpos = 0);
 
 		/*!
 		 Replace all occurrences of a substring (if present) with the given string.
 		 @param substr string to be replaced
 		 @param str string to replace
-		 @param case_insensitive Perform a case-insensitive search (default=false)
+		 @param caseInsensitive Perform a case-insensitive search (default=false)
 		 @param words_only match whole words only (default=false)
 		 @param startpos start searching at this position (default=0)
 		 @return The number of replaced strings or 0 if not found.
 		*/
 		int ReplaceAll(const std::string& substr, const std::string& str,
-			bool case_insensitive = false, bool words_only = false, int startpos = 0);
+			bool caseInsensitive = false, bool words_only = false, int startpos = 0);
 
 		/*!
 		 Find a substring.
 		 @return the index of the beginning character or -1 if not found
 		*/
-		int FindSubString(const std::string& str, bool case_insensitive = false, bool words_only = false, int startpos = 0) const;
+		int FindSubString(const std::string& str, bool caseInsensitive = false, bool words_only = false, int startpos = 0) const;
 
 		/*!
 		 Find a substring searching from the end.
 		 @return the index of the beginning character or -1 if not found
 		*/
-		int FindRevSubString(const std::string& str, bool case_insensitive = false, bool words_only = false, int startpos = -1) const;
+		int FindRevSubString(const std::string& str, bool caseInsensitive = false, bool words_only = false, int startpos = -1) const;
 
 		/*!
 		 Find any of the given substrings.
 		 @return the index of the beginning character or -1 if not found
 		*/
-		int FindSubStringAny(const std::vector<std::string>& strList, bool case_insensitive = false, bool words_only = false, int startpos = 0) const;
+		int FindSubStringAny(const std::vector<std::string>& strList, bool caseInsensitive = false, bool words_only = false, int startpos = 0) const;
 
 		/*!
 		 Find any of the given substrings searching from the end.
 		 @return the index of the beginning character or -1 if not found
 		*/
-		int FindRevSubStringAny(const std::vector<std::string>& strList, bool case_insensitive = false, bool words_only = false, int startpos = -1) const;
+		int FindRevSubStringAny(const std::vector<std::string>& strList, bool caseInsensitive = false, bool words_only = false, int startpos = -1) const;
 
 		//! Reach the position of the first occurrence of one of the given characters (return -1 if not found).
-		int FindFirstOf(const std::string& reachstr, int start = 0, bool case_insensitive = false) const;
+		int FindFirstOf(const std::string& reachstr, int start = 0, bool caseInsensitive = false) const;
 
 		//! Reach the position of the last occurrence of one of the given characters (return -1 if not found).
-		int FindLastOf(const std::string& reachstr, int start = -1, bool case_insensitive = false) const;
+		int FindLastOf(const std::string& reachstr, int start = -1, bool caseInsensitive = false) const;
 
 		//! Find the position of the first occurrence of the given character (return -1 if not found).
-		int FindChar(char chr, int start = 0, bool case_insensitive = false) const;
+		int FindChar(char chr, int start = 0, bool caseInsensitive = false) const;
 
 		//! Find the position of the last occurrence of one given character (return -1 if not found).
-		int FindLastChar(char chr, int start = -1, bool case_insensitive = false) const;
+		int FindLastChar(char chr, int start = -1, bool caseInsensitive = false) const;
 
 		//! Find the position of the first occurrence of a character not in the given string (return -1 if not found).
-		int FindFirstNotOf(const std::string& str, int start = 0, bool case_insensitive = false) const;
+		int FindFirstNotOf(const std::string& str, int start = 0, bool caseInsensitive = false) const;
 
 		//! Find the position of the last occurrence of a character not in the given string (return -1 if not found).
-		int FindLastNotOf(const std::string& str, int start = -1, bool case_insensitive = false) const;
+		int FindLastNotOf(const std::string& str, int start = -1, bool caseInsensitive = false) const;
 
 		/*!
 		 Test if the string contains the given string.
 		 @param str Search string
-		 @param case_insensitive Perform a case-insensitive search
+		 @param caseInsensitive Perform a case-insensitive search
 		*/
-		bool Contains(const std::string& str, bool case_insensitive = false) const;
+		bool Contains(const std::string& str, bool caseInsensitive = false) const;
 
 		/*!
 		 Test if the string contains <B>one or more</B> characters from the given string.
 		 @param str String of the characters that should belong to the string
-		 @param case_insensitive Case-insensitive comparison
+		 @param caseInsensitive Case-insensitive comparison
 		*/
-		bool Has(const std::string& str, bool case_insensitive = false) const;
+		bool Has(const std::string& str, bool caseInsensitive = false) const;
 
 
 		/*!
@@ -524,7 +525,7 @@ namespace gpvulc
 		std::vector<std::string> SplitStr(const std::string& delimiterString, bool removeEmpty = false) const;
 
 		//@}
-		
+
 
 		/// Analyze the text to get information.
 		/// @name Text information
@@ -539,9 +540,9 @@ namespace gpvulc
 		/*!
 		 Test if the string is made of <B>only</B> the characters from the given string.
 		 @param str String of the only characters expected to belong to the string
-		 @param case_insensitive Case-insensitive comparison
+		 @param caseInsensitive Case-insensitive comparison
 		*/
-		bool MadeOf(const std::string& str, bool case_insensitive = false) const;
+		bool MadeOf(const std::string& str, bool caseInsensitive = false) const;
 
 		/*!
 		 Count the occurrences of the given character in the given range.
@@ -549,9 +550,9 @@ namespace gpvulc
 		 @param start First position in the search range (default is 0)
 		 @param end Last position in the search range (included), if<0 (default) search until the end of the string
 		 @return the occurrences of the given character in the given range (0 if the string is empty).
-		 @param case_insensitive Perform a case-insensitive search
+		 @param caseInsensitive Perform a case-insensitive search
 		*/
-		int CountChar(char c, int start = 0, int end = -1, bool case_insensitive = false) const;
+		int CountChar(char c, int start = 0, int end = -1, bool caseInsensitive = false) const;
 
 		//! Test if a character in the string is alphanumeric.
 		bool IsAlNum(int idx) const;
@@ -721,7 +722,7 @@ namespace gpvulc
 
 		//! Convert an unsigned index to a signed integer, string::npos is converted to -1.
 		int PosToInt(size_t pos) const { return (pos == std::string::npos) ? -1 : (int)pos; }
-		
+
 		/*!
 		Convert an integer index to an unsigned index, negative values are converted to the first position (or the last if rev is true).
 		 @param pos position from the beginning of the text (or from the end if rev is true).

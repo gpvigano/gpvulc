@@ -74,11 +74,11 @@
     <OutDir>$(ProjectDir)..\..\lib\vc$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>$(ProjectDir)..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
+    <IntDir>..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)-$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>$(ProjectDir)..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
+    <IntDir>..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\..\lib\vc$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)-$(PlatformShortName)</TargetName>
   </PropertyGroup>
@@ -86,11 +86,11 @@
     <OutDir>$(ProjectDir)..\..\lib\vc$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>$(ProjectDir)..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
+    <IntDir>..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)-$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>$(ProjectDir)..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
+    <IntDir>..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\..\lib\vc$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)-$(PlatformShortName)</TargetName>
   </PropertyGroup>

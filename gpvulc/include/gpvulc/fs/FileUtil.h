@@ -44,7 +44,7 @@ namespace gpvulc
 		///@{
 
 		FileObject();
-		FileObject(const FileObject& file_info);
+		FileObject(const FileObject& fileInfo);
 		FileObject(const std::string& pathname);
 		virtual ~FileObject();
 
@@ -104,9 +104,9 @@ namespace gpvulc
 		//! Open a file with the current file path in the given mode
 		FILE* Open(const std::string& mode);
 
-		FileObject& operator = (const FileObject& file_info) { PathInfo::operator=((PathInfo&)(file_info)); return *this; }
-		bool operator == (const FileObject& file_info) const { return PathInfo::operator==((const PathInfo&)(file_info)); }
-		bool operator != (const FileObject& file_info) const { return !(*this == file_info); }
+		FileObject& operator = (const FileObject& fileInfo) { PathInfo::operator=((PathInfo&)(fileInfo)); return *this; }
+		bool operator == (const FileObject& fileInfo) const { return PathInfo::operator==((const PathInfo&)(fileInfo)); }
+		bool operator != (const FileObject& fileInfo) const { return !(*this == fileInfo); }
 
 	private:
 		friend class DirObject;
@@ -140,7 +140,11 @@ namespace gpvulc
 		///@}
 
 		//! Update after path is changed
-		virtual void DirtyPath() { PathInfo::DirtyPath(); ResetInfo(); }
+		virtual void DirtyPath()
+		{
+			PathInfo::DirtyPath();
+			ResetInfo();
+		}
 
 		//! Reset file information
 		void ResetInfo();
@@ -175,13 +179,13 @@ namespace gpvulc
 		DirObject();
 
 		//! Constructor that calls SetPathDir()
-		DirObject(const std::string& path, DirObject* parent_dir = nullptr);
+		DirObject(const std::string& path, DirObject* parentDir = nullptr);
 
 		//! Destructor
 		~DirObject();
 
 		//! Set the directory path and optionally its parent path
-		void SetDirPath(const std::string& path, DirObject* parent_dir = nullptr);
+		void SetDirPath(const std::string& path, DirObject* parentDir = nullptr);
 
 		//! Reset all and free memory
 		void Reset();
@@ -361,8 +365,10 @@ namespace gpvulc
 	//! Test if the given path is a directory
 	bool IsDirectory(const std::string& pathName);
 
+	#ifdef _WIN32
 	//! Test if the given drive lettter is available (e.g. 'C','D',...)
 	bool IsDiskAvailable(char drive_letter);
+	#endif
 
 	//! Call freopen after checking that the file with the given path can be opened
 	FILE* SafeReopen(const std::string& file_path, const std::string& mode, FILE* fileptr);

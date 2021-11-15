@@ -7,8 +7,6 @@
 // See http://opensource.org/licenses/MIT
 //
 
-#pragma once 
-
 #include <string>
 #include <vector>
 #include <iostream>

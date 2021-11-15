@@ -17,6 +17,7 @@
 #include <gpvulc/cmd/TextProcessing.h>
 
 #include <assert.h>
+#include <string.h>
 
 namespace gpvulc
 {
@@ -86,7 +87,7 @@ namespace gpvulc
 		std::vector<std::string> fileList;
 		int fileListStart = 1;
 		// TODO: implement configurable options
-		if (argc > 2 && std::strlen(argv[1]) > 2 && argv[1][0] == '-' && argv[1][1] == 'o')
+		if (argc > 2 && strlen(argv[1]) > 2 && argv[1][0] == '-' && argv[1][1] == 'o')
 		{
 			outPath.SetFullPath(&argv[1][2]);
 			outPath.SetFullName("");

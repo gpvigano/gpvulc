@@ -26,12 +26,11 @@
 #include <stdlib.h>
 #define getcwd _getcwd
 
-#define strcasecmp _stricmp
-#define strncasecmp _strnicmp
-
 #else
+
 #include <unistd.h>
 #include <dirent.h>
+
 #endif
 
 
@@ -365,7 +364,7 @@ namespace gpvulc
 		{
 			return false;
 		}
-		auto& ConvertToRegex = [](const std::string& inStr)
+		auto ConvertToRegex = [](const std::string& inStr)
 		{
 			std::string regexStr;
 			for (size_t i = 0; i < inStr.size(); i++)
@@ -491,7 +490,7 @@ namespace gpvulc
 		DirtyPath();
 
 #ifdef _WIN32
-		if (strcasecmp(ref_path.GetRootPath().c_str(), mPath.c_str()) == 0)
+		if (_stricmp(ref_path.GetRootPath().c_str(), mPath.c_str()) == 0)
 #else
 		if (r_path == mPath)
 #endif
@@ -796,7 +795,7 @@ namespace gpvulc
 	}
 
 
-	PathInfo gpvulc::GetCurrPath()
+	PathInfo GetCurrPath()
 	{
 #ifndef PATH_MAX
 #ifdef _MAX_PATH

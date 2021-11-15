@@ -74,25 +74,25 @@
     <OutDir>$(ProjectDir)..\..\bin\vc$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>$(ProjectDir)..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
+    <IntDir>..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)-$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>$(ProjectName)-$(PlatformShortName)</TargetName>
     <OutDir>$(ProjectDir)..\..\bin\vc$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
+    <IntDir>..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)..\..\bin\vc$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>$(ProjectDir)..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
+    <IntDir>..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)-$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>$(ProjectName)-$(PlatformShortName)</TargetName>
     <OutDir>$(ProjectDir)..\..\bin\vc$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
+    <IntDir>..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

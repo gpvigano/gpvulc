@@ -43,7 +43,7 @@ namespace gpvulc
 	*/
 	inline void ConsolePause()
 	{
-#ifdef _WIN32
+#if defined(_WIN32)
 		system("pause");
 #else
 		WaitForEnter();
@@ -56,7 +56,7 @@ namespace gpvulc
 	*/
 	inline void ClearConsole()
 	{
-#ifdef _WIN32
+#if defined(_WIN32)
 		system("cls");
 #else
 		system("clear");

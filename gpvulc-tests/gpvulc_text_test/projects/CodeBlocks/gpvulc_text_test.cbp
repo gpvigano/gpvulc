@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="gpvulc_text_test" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug-x86">
+				<Option output="../bin/CB-Debug/gpvulc_text_test-x86" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../TEMP/gpvulc_text_test/gcc-x86-Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="gpvulc_text-sd-x86" />
+					<Add library="gtest-gcc-sd-x86" />
+				</Linker>
+			</Target>
+			<Target title="Release-x86">
+				<Option output="../../bin/CB-Release/gpvulc_text_test-x86" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../TEMP/gpvulc_text_test/gcc-x86-Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="gpvulc_text-s-x86" />
+					<Add library="gtest-gcc-s-x86" />
+				</Linker>
+			</Target>
+			<Target title="Debug-x64">
+				<Option output="../bin/CB-Debug/gpvulc_text_test-x64" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../TEMP/gpvulc_text_test/gcc-x64-Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-m64" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-m64" />
+					<Add library="gpvulc_text-sd-x64" />
+					<Add library="gtest-gcc-sd-x64" />
+				</Linker>
+			</Target>
+			<Target title="Release-x64">
+				<Option output="../../bin/CB-Release/gpvulc_text_test-x64" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../TEMP/gpvulc_text_test/gcc-x64-Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-m64" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-m64" />
+					<Add library="gpvulc_text-s-x64" />
+					<Add library="gtest-gcc-s-x64" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=gnu++11" />
+			<Add directory="../../../../gpvulc/include" />
+			<Add directory="../../../../../depend/googletest/include" />
+		</Compiler>
+		<Linker>
+			<Add option="-static" />
+			<Add directory="../../../../gpvulc/lib/gcc" />
+			<Add directory="../../../../../depend/googletest/lib/gcc" />
+		</Linker>
+		<Unit filename="../../src/TextBuffer_test.cpp" />
+		<Unit filename="../../src/TextParser_test.cpp" />
+		<Unit filename="../../src/TextUtil_test.cpp" />
+		<Unit filename="../../src/gpvulc_text_test.cpp" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

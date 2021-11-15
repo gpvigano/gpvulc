@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <BOOST_ROOT>$(ProjectDir)..\..\..\depend\boost\</BOOST_ROOT>
+    <BOOST_ROOT>$(ProjectDir)..\..\..\..\depend\boost\</BOOST_ROOT>
     <BOOST_VER>1_70</BOOST_VER>
   </PropertyGroup>
   <PropertyGroup />

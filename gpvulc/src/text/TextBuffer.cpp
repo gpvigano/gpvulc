@@ -20,12 +20,40 @@
 
 #include <fstream>
 #include <sstream>
+#include <cstring>
 
 
-#if defined(_MSC_VER) // if using MS Visual C++
-#define strcasecmp _stricmp
-#define strncasecmp _strnicmp
+#if defined(_MSC_VER)
+#define StrCaseCmp _stricmp
+#define StrNCaseCmp _strnicmp
+#elif defined( __GNUC__ )
+#define StrCaseCmp strcasecmp
+#define StrNCaseCmp strncasecmp
+#else
+inline int StrCaseCmp(const char *s1, const char *s2)
+{
+    char c1, c2;
+    do  {
+        c1 = tolower(*s1++);
+        c2 = tolower(*s2++);
+    }
+    while ( c1 && (c1 == c2) );
+    return c1 - c2;
+}
+inline int StrNCaseCmp(const char *s1, const char *s2, size_t n)
+{
+	size_t count = 0;
+    char c1, c2;
+    do  {
+        c1 = tolower(*s1++);
+        c2 = tolower(*s2++);
+		count++;
+    }
+    while ( count<n && c1 && (c1 == c2) );
+    return c1 - c2;
+}
 #endif
+
 
 	//---------------------------------------------------------------------
 	// TextBuffer overloaded operators implementation
@@ -282,7 +310,7 @@ namespace gpvulc
 	//---------------------------------------------------------------------
 
 
-	int TextBuffer::Compare(const std::string& str, bool case_insensitive) const
+	int TextBuffer::Compare(const std::string& str, bool caseInsensitive) const
 	{
 		int retval = 0;
 
@@ -299,7 +327,7 @@ namespace gpvulc
 			return -1;
 		}
 		// !mStdString.empty() && !str.empty()
-		retval = case_insensitive ? strcasecmp(mStdString.c_str(), str.c_str()) : mStdString.compare(str);
+		retval = caseInsensitive ? StrCaseCmp(mStdString.c_str(), str.c_str()) : mStdString.compare(str);
 
 		return retval;
 	}
@@ -333,7 +361,7 @@ namespace gpvulc
 	}
 
 
-	bool TextBuffer::EndsWith(const std::string& str, bool case_insensitive) const
+	bool TextBuffer::EndsWith(const std::string& str, bool caseInsensitive) const
 	{
 		const char *tmp;
 		size_t n, ns;
@@ -353,11 +381,11 @@ namespace gpvulc
 			return false;
 		}
 		tmp = &mStdString[ns - n];
-		return case_insensitive ? !strncasecmp(tmp, str.c_str(), n) : !strncmp(tmp, str.c_str(), n);
+		return caseInsensitive ? !StrNCaseCmp(tmp, str.c_str(), n) : !strncmp(tmp, str.c_str(), n);
 	}
 
 
-	bool TextBuffer::MiddleStr(const std::string& str, int beg, bool case_insensitive) const
+	bool TextBuffer::MiddleStr(const std::string& str, int beg, bool caseInsensitive) const
 	{
 		if (str.empty())
 		{
@@ -374,7 +402,7 @@ namespace gpvulc
 			return false;
 		}
 		std::string subs = GetSubString(beg, (int)end_pos);
-		if (case_insensitive)
+		if (caseInsensitive)
 		{
 			return GetLowerStr(subs) == GetLowerStr(str);
 		}
@@ -382,13 +410,13 @@ namespace gpvulc
 	}
 
 
-	bool TextBuffer::Contains(const std::string& str, bool case_insensitive) const
+	bool TextBuffer::Contains(const std::string& str, bool caseInsensitive) const
 	{
 		if (str.empty())
 		{
 			return false;
 		}
-		if (case_insensitive)
+		if (caseInsensitive)
 		{
 			return GetLowerStr(mStdString).find(GetLowerStr(str)) != std::string::npos;
 		}
@@ -396,14 +424,14 @@ namespace gpvulc
 	}
 
 
-	bool TextBuffer::Has(const std::string& str, bool case_insensitive) const
+	bool TextBuffer::Has(const std::string& str, bool caseInsensitive) const
 	{
 		if (mStdString.empty() || str.empty())
 		{
 			return false;
 		}
 		size_t pos = std::string::npos;
-		if (case_insensitive) pos = GetLowerCase().find_first_of(GetLowerStr(str));
+		if (caseInsensitive) pos = GetLowerCase().find_first_of(GetLowerStr(str));
 		else pos = mStdString.find_first_of(str);
 		return pos != std::string::npos;
 	}
@@ -472,7 +500,7 @@ namespace gpvulc
 	}
 
 
-	int TextBuffer::FindFirstOf(const std::string& str, int start, bool case_insensitive) const
+	int TextBuffer::FindFirstOf(const std::string& str, int start, bool caseInsensitive) const
 	{
 		size_t search_pos;
 		if (!IntToPos(start, search_pos, false))
@@ -480,13 +508,13 @@ namespace gpvulc
 			return -1;
 		}
 		size_t pos = std::string::npos;
-		if (case_insensitive) pos = GetLowerCase().find_first_of(GetLowerStr(str), search_pos);
+		if (caseInsensitive) pos = GetLowerCase().find_first_of(GetLowerStr(str), search_pos);
 		else pos = mStdString.find_first_of(str, search_pos);
 		return PosToInt(pos);
 	}
 
 
-	int TextBuffer::FindLastOf(const std::string& str, int start, bool case_insensitive) const
+	int TextBuffer::FindLastOf(const std::string& str, int start, bool caseInsensitive) const
 	{
 		size_t search_pos;
 		if (!IntToPos(start, search_pos, true))
@@ -494,14 +522,14 @@ namespace gpvulc
 			return -1;
 		}
 		size_t pos = std::string::npos;
-		if (case_insensitive) pos = GetLowerCase().find_last_of(GetLowerStr(str), search_pos);
+		if (caseInsensitive) pos = GetLowerCase().find_last_of(GetLowerStr(str), search_pos);
 		else pos = mStdString.find_last_of(str, search_pos);
 		return PosToInt(pos);
 	}
 
 
 
-	int TextBuffer::FindChar(char chr, int start, bool case_insensitive) const
+	int TextBuffer::FindChar(char chr, int start, bool caseInsensitive) const
 	{
 		size_t search_pos;
 		if (!IntToPos(start, search_pos, false))
@@ -509,13 +537,13 @@ namespace gpvulc
 			return -1;
 		}
 		size_t pos = std::string::npos;
-		if (case_insensitive) pos = GetLowerCase().find(tolower(chr), search_pos);
+		if (caseInsensitive) pos = GetLowerCase().find(tolower(chr), search_pos);
 		else pos = mStdString.find(chr, search_pos);
 		return PosToInt(pos);
 	}
 
 
-	int TextBuffer::FindLastChar(char chr, int start, bool case_insensitive) const
+	int TextBuffer::FindLastChar(char chr, int start, bool caseInsensitive) const
 	{
 		size_t search_pos;
 		if (!IntToPos(start, search_pos, true))
@@ -523,13 +551,13 @@ namespace gpvulc
 			return -1;
 		}
 		size_t pos = std::string::npos;
-		if (case_insensitive) pos = GetLowerCase().rfind(tolower(chr), search_pos);
+		if (caseInsensitive) pos = GetLowerCase().rfind(tolower(chr), search_pos);
 		else pos = mStdString.rfind(chr, search_pos);
 		return PosToInt(pos);
 	}
 
 
-	int TextBuffer::FindFirstNotOf(const std::string& str, int start, bool case_insensitive) const
+	int TextBuffer::FindFirstNotOf(const std::string& str, int start, bool caseInsensitive) const
 	{
 		size_t search_pos;
 		if (!IntToPos(start, search_pos, false))
@@ -537,7 +565,7 @@ namespace gpvulc
 			return -1;
 		}
 		size_t pos;
-		if (case_insensitive)
+		if (caseInsensitive)
 		{
 			std::string lwr = GetLowerCase();
 			std::string lwrstr = GetLowerStr(str);
@@ -552,7 +580,7 @@ namespace gpvulc
 	}
 
 
-	int TextBuffer::FindLastNotOf(const std::string& str, int start, bool case_insensitive) const
+	int TextBuffer::FindLastNotOf(const std::string& str, int start, bool caseInsensitive) const
 	{
 		size_t search_pos;
 		if (!IntToPos(start, search_pos, true))
@@ -560,7 +588,7 @@ namespace gpvulc
 			return -1;
 		}
 		size_t pos;
-		if (case_insensitive)
+		if (caseInsensitive)
 		{
 			std::string lwr = GetLowerCase();
 			std::string lwrstr = GetLowerStr(str);
@@ -576,7 +604,7 @@ namespace gpvulc
 
 	int TextBuffer::FindSubString(
 		const std::string& str,
-		bool case_insensitive,
+		bool caseInsensitive,
 		bool words_only,
 		int startpos) const
 	{
@@ -588,7 +616,7 @@ namespace gpvulc
 		int start_idx;
 		const char* temp = nullptr;
 		size_t pos = std::string::npos;
-		if (case_insensitive)
+		if (caseInsensitive)
 		{
 			pos = GetLowerCase().find(GetLowerStr(str), search_pos);
 		}
@@ -608,7 +636,7 @@ namespace gpvulc
 			if ((start_idx > 0 && IsAlNum_(start_idx - 1) && IsAlNum_(start_idx))
 				|| (IsAlNum_(end_idx) && IsAlNum_(end_idx - 1)))
 			{
-				return FindSubString(str, case_insensitive, true, start_idx + 1);
+				return FindSubString(str, caseInsensitive, true, start_idx + 1);
 			}
 		}
 
@@ -618,7 +646,7 @@ namespace gpvulc
 
 	int TextBuffer::FindRevSubString(
 		const std::string& str,
-		bool case_insensitive,
+		bool caseInsensitive,
 		bool words_only,
 		int startpos) const
 	{
@@ -630,7 +658,7 @@ namespace gpvulc
 		int start_idx;
 		const char* temp = nullptr;
 		size_t pos = std::string::npos;
-		if (case_insensitive)
+		if (caseInsensitive)
 		{
 			pos = GetLowerCase().rfind(GetLowerStr(str), search_pos);
 		}
@@ -650,31 +678,31 @@ namespace gpvulc
 			if ((start_idx > 0 && IsAlNum_(start_idx - 1) && IsAlNum_(start_idx))
 				|| (IsAlNum_(end_idx) && IsAlNum_(end_idx - 1)))
 			{
-				return FindRevSubString(str, case_insensitive, true, start_idx - 1);
+				return FindRevSubString(str, caseInsensitive, true, start_idx - 1);
 			}
 		}
 
 		return start_idx;
 	}
 
-	int TextBuffer::FindSubStringAny(const std::vector<std::string>& strList, bool case_insensitive, bool words_only, int startpos) const
+	int TextBuffer::FindSubStringAny(const std::vector<std::string>& strList, bool caseInsensitive, bool words_only, int startpos) const
 	{
 		int minPos = -1;
 		for (std::string str : strList)
 		{
-			int pos = FindSubString(str, case_insensitive, words_only, startpos);
+			int pos = FindSubString(str, caseInsensitive, words_only, startpos);
 			if (pos >= 0 && (minPos<0 || minPos>pos)) minPos = pos;
 		}
 		return minPos;
 	}
 
 
-	int TextBuffer::FindRevSubStringAny(const std::vector<std::string>& strList, bool case_insensitive, bool words_only, int startpos) const
+	int TextBuffer::FindRevSubStringAny(const std::vector<std::string>& strList, bool caseInsensitive, bool words_only, int startpos) const
 	{
 		int maxPos = -1;
 		for (std::string str : strList)
 		{
-			int pos = FindRevSubString(str, case_insensitive, words_only, startpos);
+			int pos = FindRevSubString(str, caseInsensitive, words_only, startpos);
 			if (pos >= 0 && maxPos < pos) maxPos = pos;
 		}
 		return maxPos;
@@ -828,14 +856,14 @@ namespace gpvulc
 	}
 
 
-	bool TextBuffer::MadeOf(const std::string& str, bool case_insensitive) const
+	bool TextBuffer::MadeOf(const std::string& str, bool caseInsensitive) const
 	{
 		if (mStdString.empty())
 		{
 			return false;
 		}
 		size_t pos = std::string::npos;
-		if (case_insensitive) pos = GetLowerCase().find_first_not_of(GetLowerStr(str));
+		if (caseInsensitive) pos = GetLowerCase().find_first_not_of(GetLowerStr(str));
 		else pos = mStdString.find_first_not_of(str);
 		return pos == std::string::npos;
 	}
@@ -844,7 +872,7 @@ namespace gpvulc
 	int TextBuffer::ReplaceChar(
 		char oldchar,
 		char newchar,
-		bool case_insensitive,
+		bool caseInsensitive,
 		int startpos,
 		int endpos)
 	{
@@ -865,7 +893,7 @@ namespace gpvulc
 		size_t beg = (size_t)startpos;
 		size_t end = (size_t)endpos;
 
-		if (case_insensitive)
+		if (caseInsensitive)
 		{
 			char lwr = tolower(oldchar);
 			for (size_t i = beg; i <= end; ++i)
@@ -1158,6 +1186,12 @@ namespace gpvulc
 		return set_num(*this, f, width, ndecimals, zeroes);
 	}
 
+	TextBuffer& TextBuffer::Set(long n)
+	{
+		mStdString = std::to_string(n);
+		return *this;
+	}
+
 	TextBuffer& TextBuffer::Set(long long n)
 	{
 		mStdString = std::to_string(n);
@@ -1176,13 +1210,15 @@ namespace gpvulc
 	{
 		std::ostringstream ss;
 		ss.setf(std::ios::uppercase);
+//        ss.setf(std::ios::hex);
+//        ss.unsetf(std::ios::showbase);
 		ss << p;
 		mStdString = ss.str();
 		return *this;
 	}
 
 
-	bool TextBuffer::StartsWith(const std::string& str, bool case_insensitive) const
+	bool TextBuffer::StartsWith(const std::string& str, bool caseInsensitive) const
 	{
 		if (str.empty())
 		{
@@ -1194,13 +1230,13 @@ namespace gpvulc
 		}
 		int len = (int)str.length();
 		std::string subs = GetSubString(0, len - 1);
-		return StrEqual(subs, str, case_insensitive);
+		return StrEqual(subs, str, caseInsensitive);
 	}
 
 
-	bool TextBuffer::StartsWithThenCut(const std::string& str, bool case_insensitive)
+	bool TextBuffer::StartsWithThenCut(const std::string& str, bool caseInsensitive)
 	{
-		if (!StartsWith(str, case_insensitive))
+		if (!StartsWith(str, caseInsensitive))
 		{
 			return false;
 		}
@@ -1350,7 +1386,7 @@ namespace gpvulc
 	}
 
 
-	int TextBuffer::CountChar(char c, int start, int end, bool case_insensitive) const
+	int TextBuffer::CountChar(char c, int start, int end, bool caseInsensitive) const
 	{
 		if (mStdString.empty())
 		{
@@ -1359,7 +1395,7 @@ namespace gpvulc
 		int len = (int)mStdString.length();
 		if (end < 0) end = len - 1;
 		int count = 0;
-		if (case_insensitive)
+		if (caseInsensitive)
 		{
 			std::string lwr = GetLowerStr(mStdString);
 			c = tolower(c);

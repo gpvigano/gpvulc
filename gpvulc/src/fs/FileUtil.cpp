@@ -19,34 +19,47 @@
 #include <sstream>
 
 #ifdef _WIN32
-
 #define DEFAULT_DIR_SEPSTR "\\"
 #else
 #define DEFAULT_DIR_SEPSTR "/"
 #endif
 
 //#ifdef _WIN32 && !defined(__CYGWIN__)
-#ifdef _MSC_VER
+#ifdef _WIN32
 
 #include <io.h>
 #include <direct.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <Shlobj.h> // SHCreateDirectoryEx
-#define chdir _chdir
-#define getcwd _getcwd
 #define mkdir(x,y) _mkdir((x))
-#define stat64 _stati64
 
 #ifndef F_OK
 #define F_OK 4
 #endif
 
+#ifdef __GNUC__
+
+#define stat64_struct _stat64
+#define stat64_func __stat64
+
 #else
+
+#define chdir _chdir
+#define getcwd _getcwd
+
+#define stat64_struct _stati64
+#define stat64_func _stati64
+#endif
+
+#else
+
 #include <unistd.h>
 #include <dirent.h>
 
-#define stat64 stat
+#define stat64_struct stat
+#define stat64_func stat
+
 #endif
 
 #include <sys/utime.h>
@@ -76,7 +89,7 @@ namespace gpvulc
 
 		inline void FixTextSlashes(std::string& str)
 		{
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__MINGW32__)
 			char oldchar = '/';
 			char newchar = '\\';
 #else
@@ -153,15 +166,15 @@ namespace gpvulc
 			std::string src_path_list;
 			for (size_t i = 0; i < n; i++)
 			{
-				PathInfo srcpath(src[i].c_str());
-				if (srcpath.IsRelative())
+				PathInfo sourcePath(src[i].c_str());
+				if (sourcePath.IsRelative())
 				{
-					srcpath.SetPath(GetCurrDir(), DEFAULT_DIR_SEPSTR, srcpath.GetPath());
+					sourcePath.SetPath(GetCurrDir(), DEFAULT_DIR_SEPSTR, sourcePath.GetPath());
 				}
-				if (!srcpath.Defined())
+				if (!sourcePath.Defined())
 				{
 					fprintf(stderr, "A path in the list was not defined.\n");
-					return false;
+					return "";
 				}
 				src_path_list += src[i] + '\0';
 			}
@@ -279,9 +292,9 @@ namespace gpvulc
 
 	bool FileObject::ReadAttributes()
 	{
-		struct stat64 stbuf;
+		struct stat64_struct stbuf;
 
-		if (stat64(GetFullPath().c_str(), &stbuf) != 0)
+		if (stat64_func(GetFullPath().c_str(), &stbuf) != 0)
 		{
 			return false;
 		}
@@ -308,9 +321,9 @@ namespace gpvulc
 
 	bool FileObject::ReadDateTime()
 	{
-		struct stat64 stbuf;
+		struct stat64_struct stbuf;
 
-		if (stat64(GetFullPath().c_str(), &stbuf) != 0)
+		if (stat64_func(GetFullPath().c_str(), &stbuf) != 0)
 		{
 			return false;
 		}
@@ -652,9 +665,9 @@ namespace gpvulc
 	}
 
 
-	DirObject::DirObject(const std::string& path, DirObject* parent_dir)
+	DirObject::DirObject(const std::string& path, DirObject* parentDir)
 	{
-		SetDirPath(path, parent_dir);
+		SetDirPath(path, parentDir);
 	}
 
 
@@ -664,9 +677,9 @@ namespace gpvulc
 	}
 
 
-	void DirObject::SetDirPath(const std::string& path, DirObject* parent_dir)
+	void DirObject::SetDirPath(const std::string& path, DirObject* parentDir)
 	{
-		ParentDirectory = parent_dir;
+		ParentDirectory = parentDir;
 		mDirPath.SetPath(path);
 	}
 
@@ -964,7 +977,7 @@ namespace gpvulc
 			return nullptr;
 		}
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__MINGW32__)
 		const bool caseInsensitive = true;
 #else
 		const bool caseInsensitive = false;
@@ -1066,7 +1079,7 @@ namespace gpvulc
 				return "The source is a writable CD-ROM, possibly unformatted.";
 			case 0xB7: // DE_ERROR_MAX
 				return "MAX_PATH (" + ToString(MAX_PATH) + ") was exceeded during the operation.";
-			case 0x402: // 
+			case 0x402: //
 				return "An unknown error occurred. This is typically due to an invalid path in the source or destination.";
 			case 0x10000: // ERRORONDEST
 				return "An unspecified error occurred on the destination.";
@@ -1157,7 +1170,7 @@ namespace gpvulc
 		}
 		return true;
 #else
-		for (size_t i = 0; i < n; i++)
+		for (size_t i = 0; i < paths.size(); i++)
 		{
 			if (!FileDelete(paths[i], allowUndo))
 			{
@@ -1171,33 +1184,33 @@ namespace gpvulc
 
 	bool FileMove(const std::string& filename, const std::string& dest, bool allowUndo)
 	{
-		PathInfo srcpath(filename);
-		if (srcpath.IsRelative())
+		PathInfo sourcePath(filename);
+		if (sourcePath.IsRelative())
 		{
-			srcpath.SetPath(GetCurrDir(), DEFAULT_DIR_SEPSTR, srcpath.GetPath());
+			sourcePath.SetPath(GetCurrDir(), DEFAULT_DIR_SEPSTR, sourcePath.GetPath());
 		}
-		FileObject dstpath(dest);
-		if (dstpath.IsRelative())
+		FileObject destPath(dest);
+		if (destPath.IsRelative())
 		{
-			dstpath.SetPath(GetCurrDir(), DEFAULT_DIR_SEPSTR, dstpath.GetPath());
+			destPath.SetPath(GetCurrDir(), DEFAULT_DIR_SEPSTR, destPath.GetPath());
 		}
-		if (!srcpath.Defined())
+		if (!sourcePath.Defined())
 		{
 			std::cerr << "Move (Source path not defined)." << std::endl;
 			return false;
 		}
-		if (!dstpath.Defined())
+		if (!destPath.Defined())
 		{
-			std::cerr << "Move " << srcpath.GetFullPath() << "\n to (Destination path not defined)." << std::endl;
+			std::cerr << "Move " << sourcePath.GetFullPath() << "\n to (Destination path not defined)." << std::endl;
 			return false;
 		}
-		std::cout << "Move " << srcpath.GetFullPath() << "\nto " << dstpath.GetFullPath() << std::endl;
+		std::cout << "Move " << sourcePath.GetFullPath() << "\nto " << destPath.GetFullPath() << std::endl;
 
 #ifdef SHFileOperation
 		char pathbuf[_MAX_PATH + 2] = { 0 };
 		char destbuf[_MAX_PATH + 2] = { 0 };
-		strncpy(pathbuf, srcpath.GetFullPath().c_str(), _MAX_PATH);
-		strncpy(destbuf, dstpath.GetFullPath().c_str(), _MAX_PATH);
+		strncpy(pathbuf, sourcePath.GetFullPath().c_str(), _MAX_PATH);
+		strncpy(destbuf, destPath.GetFullPath().c_str(), _MAX_PATH);
 		strncpy(&pathbuf[strlen(pathbuf)], "\0\0", 2);
 		strncpy(&destbuf[strlen(destbuf)], "\0\0", 2);
 
@@ -1220,7 +1233,7 @@ namespace gpvulc
 		return true;
 #else
 		system::error_code ec;
-		filesystem::rename(srcPath.GetFullPath(), dstPath.GetFullPath(), ec);
+		filesystem::rename(sourcePath.GetFullPath(), destPath.GetFullPath(), ec);
 		if (ec.failed())
 		{
 			std::cerr << "FileMove - Move failed from "
@@ -1277,42 +1290,42 @@ namespace gpvulc
 
 	bool FileCopy(const std::string& filename, const std::string& dest, bool allowUndo)
 	{
-		PathInfo srcPath(filename);
-		if (srcPath.IsRelative())
+		PathInfo sourcePath(filename);
+		if (sourcePath.IsRelative())
 		{
-			srcPath.SetPath(GetCurrDir(), DEFAULT_DIR_SEPSTR, srcPath.GetPath());
+			sourcePath.SetPath(GetCurrDir(), DEFAULT_DIR_SEPSTR, sourcePath.GetPath());
 		}
-		PathInfo dstPath(dest);
-		if (dstPath.IsRelative())
+		PathInfo destPath(dest);
+		if (destPath.IsRelative())
 		{
-			dstPath.SetPath(GetCurrDir(), DEFAULT_DIR_SEPSTR, dstPath.GetPath());
+			destPath.SetPath(GetCurrDir(), DEFAULT_DIR_SEPSTR, destPath.GetPath());
 		}
-		if (!srcPath.Defined())
+		if (!sourcePath.Defined())
 		{
 			std::cerr << "FileCopy (destination path not defined)." << std::endl;
 			return false;
 		}
-		if (!dstPath.Defined())
+		if (!destPath.Defined())
 		{
-			std::cerr << "FileCopy " << srcPath.GetFullPath() << "\nto (destination path not defined)." << std::endl;
+			std::cerr << "FileCopy " << sourcePath.GetFullPath() << "\nto (destination path not defined)." << std::endl;
 			return false;
 		}
 
-		std::cout << "FileCopy " << srcPath.GetFullPath() << "\nto " << dstPath.GetFullPath() << std::endl;
+		std::cout << "FileCopy " << sourcePath.GetFullPath() << "\nto " << destPath.GetFullPath() << std::endl;
 
 #ifdef SHFileOperation
-		char srcPathBuf[_MAX_PATH] = { 0 };
+		char sourcePathBuf[_MAX_PATH] = { 0 };
 		char destPathBuf[_MAX_PATH] = { 0 };
-		strncpy(srcPathBuf, srcPath.GetFullPath().c_str(), _MAX_PATH - 2);
-		strncpy(destPathBuf, dstPath.GetFullPath().c_str(), _MAX_PATH - 2);
-		strncpy(&srcPathBuf[strlen(srcPathBuf)], "\0\0", 2);
+		strncpy(sourcePathBuf, sourcePath.GetFullPath().c_str(), _MAX_PATH - 2);
+		strncpy(destPathBuf, destPath.GetFullPath().c_str(), _MAX_PATH - 2);
+		strncpy(&sourcePathBuf[strlen(sourcePathBuf)], "\0\0", 2);
 		strncpy(&destPathBuf[strlen(destPathBuf)], "\0\0", 2);
 
 		SHFILEOPSTRUCT shfo;
 		shfo.hwnd = GetDesktopWindow();
 
 		shfo.wFunc = FO_COPY;
-		shfo.pFrom = srcPathBuf;
+		shfo.pFrom = sourcePathBuf;
 		shfo.pTo = destPathBuf;
 		shfo.fFlags = FOF_NOERRORUI | FOF_NOCONFIRMATION | FOF_NOCONFIRMMKDIR | FOF_MULTIDESTFILES;
 		if (allowUndo) shfo.fFlags |= FOF_ALLOWUNDO;
@@ -1390,6 +1403,7 @@ namespace gpvulc
 
 	int FileCompareByTime(const std::string& path1, const std::string& path2)
 	{
+#ifdef FILETIME
 		bool result = true;
 
 		FILETIME filetime1;
@@ -1427,6 +1441,30 @@ namespace gpvulc
 		}
 
 		return -1;
+#else
+		boost::system::error_code err1;
+		std::time_t time1 = boost::filesystem::last_write_time(path1,err1);
+		if (err1)
+		{
+			return -1;
+		}
+		boost::system::error_code err2;
+		std::time_t time2 = boost::filesystem::last_write_time(path2,err2);
+		if (err2)
+		{
+			return -1;
+		}
+		double seconds = difftime(time2, time1);
+		if (seconds > 0.0)
+		{
+			return 2; // First file time is earlier than second file time.
+		}
+		if (seconds < 0.0)
+		{
+			return 1; // First file time is later than second file time.
+		}
+		return 0; // First file time is equal to second file time.
+#endif
 	}
 
 
@@ -1493,33 +1531,33 @@ namespace gpvulc
 				return false;
 			}
 
-			PathInfo orig_file(filename);  // original file
-			PathInfo new_file(filename);   // backup file
-			new_file.SetExt("~", new_file.GetExt());
+			PathInfo origFile(filename);  // original file
+			PathInfo newFile(filename);   // backup file
+			newFile.SetExt("~", newFile.GetExt());
 #ifdef CopyFile
 			if (restore)
 			{
 				return CopyFile(
-					new_file.GetFullPath().c_str(), // pointer to filename to copy to
-					orig_file.GetFullPath().c_str(),  // pointer to name of an existing file
+					newFile.GetFullPath().c_str(), // pointer to filename to copy to
+					origFile.GetFullPath().c_str(),  // pointer to name of an existing file
 					FALSE   // flag for operation if file exists
 					) == TRUE;
 			}
 
 			return CopyFile(
-				orig_file.GetFullPath().c_str(),
-				new_file.GetFullPath().c_str(),
+				origFile.GetFullPath().c_str(),
+				newFile.GetFullPath().c_str(),
 				FALSE
 				) == TRUE;
 #else
 			system::error_code ec;
 			if (restore)
 			{
-				filesystem::copy_file(new_file.GetFullPath(), orig_file.GetFullPath(), filesystem::copy_option::overwrite_if_exists, ec);
+				filesystem::copy_file(newFile.GetFullPath(), origFile.GetFullPath(), filesystem::copy_option::overwrite_if_exists, ec);
 			}
 			else
 			{
-				filesystem::copy_file(orig_file.GetFullPath(), new_file.GetFullPath(), filesystem::copy_option::overwrite_if_exists, ec);
+				filesystem::copy_file(origFile.GetFullPath(), newFile.GetFullPath(), filesystem::copy_option::overwrite_if_exists, ec);
 			}
 			return !ec.failed();
 #endif
@@ -1569,8 +1607,11 @@ namespace gpvulc
 			std::cerr << GetOpErrorString(err) << std::endl;
 			return false;
 		}
-#else
+#elif defined(__linux__)
 		mkdir(path.GetPath().c_str(), 0755);
+		return false;
+#else
+		mkdir(path.GetPath().c_str());
 		return false;
 #endif
 	}
@@ -1578,21 +1619,21 @@ namespace gpvulc
 
 	std::string GetCurrDir()
 	{
-		const int max_path = 1024;
-		static char path_name[max_path + 1];
-		*path_name = 0;
+		const int maxPath = 1024;
+		static char pathName[maxPath + 1];
+		*pathName = 0;
 
-		return getcwd(path_name, max_path);
+		return getcwd(pathName, maxPath);
 	}
 
 
-	bool ChangeCurrDir(const std::string& path_name)
+	bool ChangeCurrDir(const std::string& pathName)
 	{
-		if (path_name.empty())
+		if (pathName.empty())
 		{
 			return false;
 		}
-		if (chdir(path_name.c_str()))
+		if (chdir(pathName.c_str()))
 		{
 			return false;
 		}
@@ -1600,13 +1641,13 @@ namespace gpvulc
 	}
 
 
-	bool ChangeCurrDirToFilePath(const std::string& path_name)
+	bool ChangeCurrDirToFilePath(const std::string& pathName)
 	{
-		if (path_name.empty())
+		if (pathName.empty())
 		{
 			return false;
 		}
-		PathInfo exeinfo(path_name);
+		PathInfo exeinfo(pathName);
 		exeinfo.ChangeToAbsPathFromCurrDir();
 		return ChangeCurrDir(exeinfo.GetPath());
 	}
@@ -1626,9 +1667,11 @@ namespace gpvulc
 		return boost::filesystem::is_directory(p);
 	}
 
+// IsDiskAvailable() available only for Windows platform.
+#ifdef _WIN32
+
 	bool IsDiskAvailable(char drive_letter)
 	{
-#ifdef GetDriveType
 		drive_letter = toupper(drive_letter);
 		if (drive_letter<'A' || drive_letter>'Z')
 		{
@@ -1669,10 +1712,8 @@ namespace gpvulc
 		SetErrorMode(0);
 
 		return false;
-#else
-#error Warning! IsDiskAvailable() not available for the current platform (any contribution is welcome...).
-#endif
 	}
+#endif // _WIN32
 
 
 	FILE* SafeReopen(const std::string& file_path, const std::string& mode, FILE* fileptr)

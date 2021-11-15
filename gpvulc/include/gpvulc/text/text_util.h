@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <vector>
 
+
 namespace gpvulc
 {
 	/// @defgroup Text Text
@@ -27,6 +28,7 @@ namespace gpvulc
 
 	/// @addtogroup Text
 	/// @{
+
 
 	//! Convert the given string to lower case
 	inline void StrLower(std::string& str)
@@ -93,9 +95,9 @@ namespace gpvulc
 
 
 	//! Check equality between two strings, optionally ignoring case
-	inline bool StrEqual(const std::string& str1, const std::string& str2, bool case_insensitive = false)
+	inline bool StrEqual(const std::string& str1, const std::string& str2, bool caseInsensitive = false)
 	{
-		if (case_insensitive)
+		if (caseInsensitive)
 		{
 			return GetLowerStr(str1) == GetLowerStr(str2);
 		}
@@ -104,13 +106,12 @@ namespace gpvulc
 
 
 	//! Check equality between a string and one of other strings, optionally ignoring case
-	inline bool StrIsOneOf(const std::string& str1, const std::vector<std::string>& otherStr, bool case_insensitive = false)
+	inline bool StrIsOneOf(const std::string& str1, const std::vector<std::string>& otherStr, bool caseInsensitive = false)
 	{
-		bool isEqual = false;
 		for (const std::string& str : otherStr)
 		{
-			if ((case_insensitive && GetLowerStr(str1) == GetLowerStr(str))
-				|| (!case_insensitive && str1 == str))
+			if ((caseInsensitive && GetLowerStr(str1) == GetLowerStr(str))
+				|| (!caseInsensitive && str1 == str))
 			{
 				return true;
 			}

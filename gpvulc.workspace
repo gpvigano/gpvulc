@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="gpvulc">
+		<Project filename="gpvulc/projects/CodeBlocks/gpvulc_text.cbp" />
+		<Project filename="gpvulc/projects/CodeBlocks/gpvulc_path.cbp" />
+		<Project filename="gpvulc-tests/gpvulc_text_test/projects/CodeBlocks/gpvulc_text_test.cbp">
+			<Depends filename="gpvulc/projects/CodeBlocks/gpvulc_text.cbp" />
+		</Project>
+		<Project filename="gpvulc-tests/gpvulc_path_test/projects/CodeBlocks/gpvulc_path_test.cbp">
+			<Depends filename="gpvulc/projects/CodeBlocks/gpvulc_path.cbp" />
+		</Project>
+		<Project filename="gpvulc/projects/CodeBlocks/gpvulc_json.cbp" />
+		<Project filename="gpvulc/projects/CodeBlocks/gpvulc_console.cbp" />
+		<Project filename="gpvulc/projects/CodeBlocks/gpvulc_time.cbp" />
+		<Project filename="gpvulc/projects/CodeBlocks/gpvulc_filesystem.cbp">
+			<Depends filename="gpvulc/projects/CodeBlocks/gpvulc_text.cbp" />
+			<Depends filename="gpvulc/projects/CodeBlocks/gpvulc_path.cbp" />
+			<Depends filename="gpvulc/projects/CodeBlocks/gpvulc_time.cbp" />
+		</Project>
+		<Project filename="gpvulc/projects/CodeBlocks/gpvulc_cmd.cbp">
+			<Depends filename="gpvulc/projects/CodeBlocks/gpvulc_text.cbp" />
+			<Depends filename="gpvulc/projects/CodeBlocks/gpvulc_path.cbp" />
+			<Depends filename="gpvulc/projects/CodeBlocks/gpvulc_console.cbp" />
+		</Project>
+	</Workspace>
+</CodeBlocks_workspace_file>
