@@ -13,9 +13,11 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-m32" />
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
+					<Add option="-m32" />
 					<Add library="gpvulc_path-sd-x86" />
 					<Add library="gtest-gcc-sd-x86" />
 				</Linker>
@@ -27,9 +29,11 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-m32" />
 					<Add option="-O2" />
 				</Compiler>
 				<Linker>
+					<Add option="-m32" />
 					<Add option="-s" />
 					<Add library="gpvulc_path-s-x86" />
 					<Add library="gtest-gcc-s-x86" />

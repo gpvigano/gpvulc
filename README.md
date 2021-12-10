@@ -43,6 +43,10 @@ Projects for Visual Studio 2015 and [Code::Blocks] are provided in this version.
 **Important:** these libraries must be linked as static libraries, they are not designed to be compiled and linked as dynamic linking libraries.
 This feature could be a future development, changes are needed to prevent allocation and deallocation in different modules.
 
+**Warning for Code::Blocks:** it is not possible to link 32 bit libraries with the default Code::Blocks/mingw 64 bit installation, 32 bit libraries cannot be found.
+The toolchain installed along with Code::Blocks-mingw (64 bit) cannot build 32 bit.
+[You need to install the 32 bit toolchain yourself and point CodeBlocks to use that one to build for 32 bit.](https://forums.codeblocks.org/index.php/topic,23817.msg162483.html#msg162483)
+
 ## Dependencies
 Some libraries use [boost] libraries (version 1.70.0). The boost folder is assumed to be in a folder `depend` (in the upper level folder, at the same level as this repository folder), otherwise you must update the projects (the same holds for [rapidjson]).
 Libraries dependencies are summarized here:
