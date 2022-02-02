@@ -69,7 +69,7 @@
 		<Compiler>
 			<Add option="-std=c++14" />
 			<Add directory="../../include" />
-			<Add directory="../../../depend/boost" />
+			<Add directory="../../../../depend/boost" />
 		</Compiler>
 		<Linker>
 			<Add option="-static" />

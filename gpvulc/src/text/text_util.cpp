@@ -41,7 +41,10 @@ namespace gpvulc
 				else str[i] = tolower(str[i]);
 				capital = false;
 			}
-			else capital = true;
+			else
+            {
+                capital = true;
+            }
 		}
 	}
 
@@ -65,7 +68,10 @@ namespace gpvulc
 			}
 		}
 
-		for (; i < len; ++i) str[i] = tolower(str[i]);
+		for (; i < len; ++i)
+        {
+            str[i] = tolower(str[i]);
+        }
 	}
 
 
@@ -122,7 +128,10 @@ namespace gpvulc
 		}
 
 		std::string cid;
-		if ((unsigned)(str[0] + 1) <= 256 && isdigit(str[0])) cid = "_";
+		if ((unsigned)(str[0] + 1) <= 256 && isdigit(str[0]))
+        {
+            cid = "_";
+        }
 
 		cid += str;
 

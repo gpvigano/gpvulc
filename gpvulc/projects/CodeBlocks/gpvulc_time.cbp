@@ -73,7 +73,7 @@
 			<Add option="-std=c++14" />
 			<Add option="-D_CODE_BLOCKS" />
 			<Add directory="../../include" />
-			<Add directory="../../../boost" />
+			<Add directory="../../../../depend/boost" />
 		</Compiler>
 		<Linker>
 			<Add option="-static" />
