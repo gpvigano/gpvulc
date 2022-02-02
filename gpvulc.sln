@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpvulc_fs_example", "examples\gpvulc_fs_example\projects\vs2015\gpvulc_fs_example.vcxproj", "{BD701BF6-7C05-4978-BE95-061F23EB76FB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AF59FCF5-9FA8-466A-A229-B528A8C7D703} = {AF59FCF5-9FA8-466A-A229-B528A8C7D703}
+	EndProjectSection
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpvulc_path_test", "gpvulc-tests\gpvulc_path_test\projects\vs2015\gpvulc_path_test.vcxproj", "{ADF069CC-ED8B-49B6-B68B-59DBE0F00EC4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B18F4669-B4D7-48A4-905E-DC5A3B74D826} = {B18F4669-B4D7-48A4-905E-DC5A3B74D826}
@@ -30,6 +35,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpvulc_cmd", "gpvulc\projec
 	ProjectSection(ProjectDependencies) = postProject
 		{B18F4669-B4D7-48A4-905E-DC5A3B74D826} = {B18F4669-B4D7-48A4-905E-DC5A3B74D826}
 		{C76FE3D3-8A28-420D-8478-F741EE391C37} = {C76FE3D3-8A28-420D-8478-F741EE391C37}
+		{857AFAE1-A888-4025-954E-F01D1C8DFD22} = {857AFAE1-A888-4025-954E-F01D1C8DFD22}
+		{AF59FCF5-9FA8-466A-A229-B528A8C7D703} = {AF59FCF5-9FA8-466A-A229-B528A8C7D703}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpvulc_console", "gpvulc\projects\vs2015\gpvulc_console.vcxproj", "{857AFAE1-A888-4025-954E-F01D1C8DFD22}"
@@ -44,6 +51,14 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD701BF6-7C05-4978-BE95-061F23EB76FB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BD701BF6-7C05-4978-BE95-061F23EB76FB}.Debug|Win32.Build.0 = Debug|Win32
+		{BD701BF6-7C05-4978-BE95-061F23EB76FB}.Debug|x64.ActiveCfg = Debug|x64
+		{BD701BF6-7C05-4978-BE95-061F23EB76FB}.Debug|x64.Build.0 = Debug|x64
+		{BD701BF6-7C05-4978-BE95-061F23EB76FB}.Release|Win32.ActiveCfg = Release|Win32
+		{BD701BF6-7C05-4978-BE95-061F23EB76FB}.Release|Win32.Build.0 = Release|Win32
+		{BD701BF6-7C05-4978-BE95-061F23EB76FB}.Release|x64.ActiveCfg = Release|x64
+		{BD701BF6-7C05-4978-BE95-061F23EB76FB}.Release|x64.Build.0 = Release|x64
 		{ADF069CC-ED8B-49B6-B68B-59DBE0F00EC4}.Debug|Win32.ActiveCfg = Debug|Win32
 		{ADF069CC-ED8B-49B6-B68B-59DBE0F00EC4}.Debug|Win32.Build.0 = Debug|Win32
 		{ADF069CC-ED8B-49B6-B68B-59DBE0F00EC4}.Debug|x64.ActiveCfg = Debug|x64

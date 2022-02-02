@@ -22,5 +22,6 @@
 			<Depends filename="gpvulc/projects/CodeBlocks/gpvulc_path.cbp" />
 			<Depends filename="gpvulc/projects/CodeBlocks/gpvulc_console.cbp" />
 		</Project>
+		<Project filename="examples/gpvulc_fs_example/projects/CodeBlocks/gpvulc_fs_example.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
