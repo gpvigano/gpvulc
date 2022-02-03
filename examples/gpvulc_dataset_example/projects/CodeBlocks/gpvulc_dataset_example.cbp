@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="gpvulc_dataset_example" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug-x86">
+				<Option output="../bin/CB-Debug/gpvulc_dataset_example-x86" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../TEMP/gpvulc_dataset_example/gcc-Debug-x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-m32" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="-m32" />
+					<Add library="gpvulc_filesystem-sd-x86" />
+					<Add library="gpvulc_dataset-sd-x86" />
+					<Add library="gpvulc_text-sd-x86" />
+					<Add library="gpvulc_time-sd-x86" />
+					<Add library="gpvulc_path-sd-x86" />
+					<Add library="boost_date_time-gcc-sd-x86" />
+					<Add library="boost_filesystem-gcc-sd-x86" />
+				</Linker>
+			</Target>
+			<Target title="Release-x86">
+				<Option output="../../bin/CB-Release/gpvulc_dataset_example-x86" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../TEMP/gpvulc_dataset_example/gcc-Release-x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-m32" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-m32" />
+					<Add option="-s" />
+					<Add library="gpvulc_filesystem-s-x86" />
+					<Add library="gpvulc_dataset-s-x86" />
+					<Add library="gpvulc_text-s-x86" />
+					<Add library="gpvulc_time-s-x86" />
+					<Add library="gpvulc_path-s-x86" />
+					<Add library="boost_date_time-gcc-s-x86" />
+					<Add library="boost_filesystem-gcc-s-x86" />
+				</Linker>
+			</Target>
+			<Target title="Debug-x64">
+				<Option output="../bin/CB-Debug/gpvulc_dataset_example-x64" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../TEMP/gpvulc_dataset_example/gcc-Debug-x64/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-m64" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-m64" />
+					<Add library="gpvulc_filesystem-sd-x64" />
+					<Add library="gpvulc_dataset-sd-x64" />
+					<Add library="gpvulc_text-sd-x64" />
+					<Add library="gpvulc_time-sd-x64" />
+					<Add library="gpvulc_path-sd-x64" />
+					<Add library="boost_date_time-gcc-sd-x64" />
+					<Add library="boost_filesystem-gcc-sd-x64" />
+				</Linker>
+			</Target>
+			<Target title="Release-x64">
+				<Option output="../../bin/CB-Release/gpvulc_dataset_example-x64" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../TEMP/gpvulc_dataset_example/gcc-Release-x64/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-m64" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-m64" />
+					<Add library="gpvulc_filesystem-s-x64" />
+					<Add library="gpvulc_dataset-s-x64" />
+					<Add library="gpvulc_text-s-x64" />
+					<Add library="gpvulc_time-s-x64" />
+					<Add library="gpvulc_path-s-x64" />
+					<Add library="boost_date_time-gcc-s-x64" />
+					<Add library="boost_filesystem-gcc-s-x64" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=gnu++11" />
+			<Add directory="../../../../gpvulc/include" />
+			<Add directory="../../../../../depend/boost" />
+		</Compiler>
+		<Linker>
+			<Add option="-static" />
+			<Add directory="../../../../gpvulc/lib/gcc" />
+			<Add directory="../../../../../depend/boost/lib" />
+		</Linker>
+		<Unit filename="../../src/gpvulc_dataset_example.cpp" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

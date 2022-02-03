@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2A461991-EAE4-422C-A03B-2ADD7E619604}</ProjectGuid>
+    <RootNamespace>gpvulc_dataset</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)..\..\lib\vc$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)-$(PlatformShortName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\..\lib\vc$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</OutDir>
+    <TargetName>$(ProjectName)-$(PlatformShortName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)..\..\lib\vc$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IntDir>..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)-$(PlatformShortName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>..\..\TEMP\$(MSBuildProjectName)\VC$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\..\lib\vc$(PlatformToolsetVersion)-$(PlatformShortName)-$(Configuration)\</OutDir>
+    <TargetName>$(ProjectName)-$(PlatformShortName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\ds\DataSet.cpp" />
+    <ClCompile Include="..\..\src\ds\DsGeomGen.cpp" />
+    <ClCompile Include="..\..\src\ds\Exporter.cpp" />
+    <ClCompile Include="..\..\src\ds\exp\ObjExporter.cpp" />
+    <ClCompile Include="..\..\src\ds\GeoData.cpp" />
+    <ClCompile Include="..\..\src\ds\imp\A3dsLoader.cpp" />
+    <ClCompile Include="..\..\src\ds\imp\ObjLoader.cpp" />
+    <ClCompile Include="..\..\src\ds\Loader.cpp" />
+    <ClCompile Include="..\..\src\ds\Material.cpp" />
+    <ClCompile Include="..\..\src\ds\math\Animation.cpp" />
+    <ClCompile Include="..\..\src\ds\math\Constraints.cpp" />
+    <ClCompile Include="..\..\src\ds\math\Location.cpp" />
+    <ClCompile Include="..\..\src\ds\math\mathutil.cpp" />
+    <ClCompile Include="..\..\src\ds\math\TangentSpace.cpp" />
+    <ClCompile Include="..\..\src\ds\math\Transform.cpp" />
+    <ClCompile Include="..\..\src\ds\MtlData.cpp" />
+    <ClCompile Include="..\..\src\ds\util\BusyCallback.cpp" />
+    <ClCompile Include="..\..\src\ds\util\ConsoleMessage.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\gpvulc\ds\DataSet.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\DsGeomGen.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\Exporter.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\exp\ObjExporter.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\GeoData.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\imp\A3dsLoader.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\imp\ObjLoader.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\Loader.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\Material.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\math\Animation.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\math\Constraints.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\math\gvmath.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\math\Location.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\math\mathdefs.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\math\TangentSpace.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\math\Transform.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\MtlData.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\util\autoinit.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\util\BusyCallback.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\util\ConsoleMessage.h" />
+    <ClInclude Include="..\..\include\gpvulc\ds\util\DynArray.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\include\gpvulc\ds\util\dynarrayimpl.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

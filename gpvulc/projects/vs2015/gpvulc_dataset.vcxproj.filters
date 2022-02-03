@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7413d426-d2e0-44df-9345-25f9a1da51c9}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{1abbfb19-b2e3-4a65-9d72-bb0b048f8bfd}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{90684225-7077-428f-9f21-5914b1c12ce6}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\exp">
+      <UniqueIdentifier>{a3077b16-038e-4a7f-a951-c5cf63b1dce9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\imp">
+      <UniqueIdentifier>{18a0a6ac-6764-4460-bb37-f672ab89afc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\imp">
+      <UniqueIdentifier>{444908c3-98b0-40b1-8ef9-2507d137bf3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\exp">
+      <UniqueIdentifier>{2850d2c0-4e4d-400f-bd92-3eeb2971f6b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{a1f3c1ce-6456-4bf0-8c68-3add4327ed27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\math">
+      <UniqueIdentifier>{a9c3ad09-fb5d-44c4-8863-ffd956fc4928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{f547548e-8ec9-4a50-8bb5-cc95f3a83d8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{1c8383cc-2725-4b73-b571-43d09ec99652}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\ds\DataSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\DsGeomGen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\Exporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\GeoData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\Loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\MtlData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\imp\A3dsLoader.cpp">
+      <Filter>Source Files\imp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\imp\ObjLoader.cpp">
+      <Filter>Source Files\imp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\exp\ObjExporter.cpp">
+      <Filter>Source Files\exp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\math\Transform.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\math\Animation.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\math\Constraints.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\math\Location.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\math\TangentSpace.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\math\mathutil.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\util\ConsoleMessage.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ds\util\BusyCallback.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\gpvulc\ds\DataSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\DsGeomGen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\Exporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\GeoData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\Loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\MtlData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\exp\ObjExporter.h">
+      <Filter>Header Files\exp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\imp\ObjLoader.h">
+      <Filter>Header Files\imp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\imp\A3dsLoader.h">
+      <Filter>Header Files\imp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\math\Animation.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\math\Constraints.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\math\gvmath.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\math\Location.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\math\mathdefs.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\math\TangentSpace.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\math\Transform.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\util\autoinit.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\util\BusyCallback.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\util\ConsoleMessage.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpvulc\ds\util\DynArray.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\include\gpvulc\ds\util\dynarrayimpl.inl">
+      <Filter>Header Files\util</Filter>
+    </None>
+  </ItemGroup>
+</Project>

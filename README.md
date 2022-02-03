@@ -1,5 +1,5 @@
 # GPV's Utility Libraries Collection for C++
-**version 1.1**
+**experimental version 1.2a**
 
 ---
 This is a collection of utility libraries for C++, based on the standard C++ library, with minimal external dependencies (some of the libraries depend on [boost]).
@@ -13,11 +13,13 @@ This collection include these libraries:
 * **gpvulc_filesystem** - File system management (dependencies: boost, gpvulc_time, gpvulc_path, gpvulc_text)
 * **gpvulc_cmd** - Command line utility (dependencies: gpvulc_filesystem)
 * **gpvulc_json** - JSON serialization utility based on [rapidjson] (dependencies: rapidjson)
+* **gpvulc_dataset** - 3D data set management (dependences: all other libraries)
 
 You can find the full documentation (automatically generated with [Doxygen]) and a distribution (in ZIP archives) of external libraries sources and binaries for VS2015 along with each release (see Releases section in [this GitHub page](https://github.com/gpvigano/gpvulc)). To get the compiled binaries for [Google C++ Testing Framework] a Visual Studio 2015 project was added in `depend/googletest/googletest-release-1.8.1/vs2015/` folder. For [boost] you can find sources in `depend/boost/src` folder (VS2015 projects in `depend/boost/src/vs2015`).
 
 ## Remarks
 Even if designed with portability in mind, all libraries were developed with Visual Studio 2015 and tested on Windows platform (a porting to other platforms should be a nice contribution). Additional projects are available for [Code::Blocks] configured with gcc as compiler.
+
 Some remarks about the `gpvulc` libraries:
 * **gpvulc_text** is based on the standard C++ library, designed to provide a user-friendly programming interface, partly inspired by C# String class. This library should work with most operating systems.
 * **gpvulc_path** is a file path management utility, it is something like `boost_filesystem` library; if you are already using [boost] you are encouraged to use `boost_filesystem`. This library should work with most operating systems.
@@ -27,6 +29,10 @@ Some remarks about the `gpvulc` libraries:
 * **gpvulc_cmd** provides a fast way to develop command line file processing utilities
   (it depends on `gpvulc_filesystem`).
 * **gpvulc_json** - parser and writer classes that use [rapidjson] to parse and write documents into a string buffer, exceptions are handled in order to complete the document parsing, collecting errors in a final error summary; an exception can be thrown at the end with the error summary attached (it depends only on rapidjson).
+* **gpvulc_dataset**: simple geometry data processing and basic run-time loaders/exporters
+
+The last library (*gpvulc_dataset*) uses unsafe code with some C-style programming, probably it is not compliant with all operating systems. If you need something more robust, efficient and up to date, maybe this is not the best choice. This library can come in handy for simple geometry data processors or as starting point to build run-time loaders/exporters for a game engine (see also *Open Asset Import Library*, otherwise known as [Assimp](https://github.com/assimp/assimp)).
+Please note that this library suffers from a poor design (e.g. C++ mixed to C-style code) and from lack of format uniformity. I decided to share this work anyway as is (in a separate branch), but at the moment I'm not interested in further developments (of course I can support small fixes and a minimal maintenance, if requested).
 
 The following naming convention is adopted for folders:
 * `include`: header files
@@ -46,7 +52,6 @@ This feature could be a future development, changes are needed to prevent alloca
 **Warning for Code::Blocks:** it is not possible to link 32 bit libraries with the default Code::Blocks/mingw 64 bit installation (32 bit libraries cannot be found).
 The toolchain installed along with Code::Blocks-mingw (64 bit) cannot build 32 bit.
 [You need to install the 32 bit toolchain yourself and point CodeBlocks to use that one to build for 32 bit.](https://forums.codeblocks.org/index.php/topic,23817.msg162483.html#msg162483)
-
 ## Dependencies
 Some libraries use [boost] libraries (version 1.70.0). The boost folder is assumed to be in a folder `depend` (in the upper level folder, at the same level as this repository folder), otherwise you must update the projects (the same holds for [rapidjson]).
 Libraries dependencies are summarized here:
@@ -57,6 +62,7 @@ Libraries dependencies are summarized here:
 * **gpvulc_filesystem**: boost, gpvulc_time, gpvulc_path, gpvulc_text
 * **gpvulc_cmd**: gpvulc_filesystem (and its dependencies)
 * **gpvulc_json**: rapidjson (version 1.1.0)
+* **gpvulc_dataset**: all other libraries
 
 For some libraries (e.g. `gpvulc_text` and `gpvulc_path`) test projects are provided, implemented using [Google C++ Testing Framework].
 
@@ -81,3 +87,4 @@ If you want to update the libraries you should build and run the tests in `gpvul
 [boost]: https://www.boost.org/
 [rapidjson]: https://github.com/miloyip/rapidjson/
 [Code::Blocks]: https://www.codeblocks.org/
+
