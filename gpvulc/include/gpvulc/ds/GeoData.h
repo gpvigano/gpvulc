@@ -86,12 +86,32 @@ namespace gpvulc
 
 	/*!
 	  Calculate faces normals for a list of faces (use SplitVerts() if you have shared vertices).
-	 @param verts          list of vertices
-	 @param faces          list of faces
-	 @param faces_normals  (output) list of normals: if a non-empty list is provided it will be filled, otherwise a new list is created
+	 @param[in] verts          list of vertices
+	 @param[in] faces          list of faces
+	 @param[in,out] vertNormals list of normals (the list is updated)
+	 @param[out] normalIndices indices in the list of normals
 	 @return true on success or false on error (any pointer null, any counter==0 or memory allocation failure).
 	*/
-	bool CalcFaceNormals(std::vector<Vec3>& verts, std::vector<TriangleIndices>& faces, std::vector<Vec3>& faces_normals);
+	void CalculateSmoothNormals(
+		const std::vector<Vec3>& verts,
+		const std::vector<TriangleIndices>& faces,
+		std::vector<Vec3>& vertNormals,
+		std::vector<TriangleIndices>& normalIndices
+	);
+
+
+	/*!
+	  Calculate faces normals for a list of faces (use SplitVerts() if you have shared vertices).
+	 @param[in] verts          list of vertices
+	 @param[in] faces          list of faces
+	 @param[out] faces_normals list of normals: if a non-empty list is provided it will be filled, otherwise a new list is created
+	 @return true on success or false on error (any pointer null, any counter==0 or memory allocation failure).
+	*/
+	bool CalcFaceNormals(
+		const std::vector<Vec3>& verts,
+		const std::vector<TriangleIndices>& faces,
+		std::vector<Vec3>& faces_normals
+	);
 
 	/*!
 	  Calculate vertex normals for a list of faces (interpolated).
@@ -106,18 +126,25 @@ namespace gpvulc
 	 @param facescount     number of faces in the subrange (default=0, until the last face)
 	 @return true on success or false on error (any pointer null, any counter==0 or memory allocation failure).
 	*/
-	bool CalcVertNormals(const std::vector<Vec3>& verts, std::vector<TriangleIndices>& faces, std::vector<Vec3>& vert_normals, unsigned int vertsbeg = 0, unsigned int vertscount = 0, unsigned int facesbeg = 0, unsigned int facescount = 0);
+	bool CalcVertNormals(
+		const std::vector<Vec3>& verts,
+		std::vector<TriangleIndices>& faces,
+		std::vector<Vec3>& vert_normals,
+		unsigned int vertsbeg = 0,
+		unsigned int vertscount = 0,
+		unsigned int facesbeg = 0,
+		unsigned int facescount = 0
+	);
 
 	/*!
 	  Split vertices shared by a list of faces.
-	 @param verts          list of vertices
-	 @param new_verts      (output) pointer for the new list of vertices
-	 @param faces          list of faces
-	 @param normals        list of normals: if a null list is provided it will be ignored
-	 @param new_normals    (output) pointer for the new list of normals
-	 @param tex_coords     list of texture coordinates: if a null list is provided it will be ignored
-	 @param new_tex_coords (output) pointer for the new list of texture coordinates
-	 @param deletelists    delete old lists (vertices,normals,texture coords)
+	 @param[in] verts           list of vertices
+	 @param[out] new_verts      new list of vertices
+	 @param[in] faces           list of faces
+	 @param[in] normals         list of normals: if a null list is provided it will be ignored
+	 @param[out] new_normals    new list of normals
+	 @param[in] tex_coords      list of texture coordinates: if a null list is provided it will be ignored
+	 @param[out] new_tex_coords new list of texture coordinates
 	*/
 	bool SplitVerts(
 		const std::vector<Vec3>& verts,
@@ -126,7 +153,8 @@ namespace gpvulc
 		std::vector<Vec3>& normals,
 		std::vector<Vec3>& new_normals,
 		const std::vector<TexCoord>& tex_coords,
-		std::vector<TexCoord>& new_tex_coords);
+		std::vector<TexCoord>& new_tex_coords
+	);
 }
 
 ///@} (DataSet)

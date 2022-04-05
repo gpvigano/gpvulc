@@ -150,16 +150,23 @@ inline void DynArray<itemType>::Merge(const std::vector<itemType>& v, int count)
 template<class itemType>
 inline void DynArray<itemType>::Copy(const std::vector<itemType>& v, int count)
 {
-	if (count <= 0)
+	if (v.empty())
 	{
+		Data->clear();
 		return;
 	}
+	if (count <= 0)
+	{
+		*Data = v;
+		return;
+	}
+
 	auto endItr = v.end();
-	if (count < v.size())
+	if (count < (int)v.size())
 	{
 		endItr = v.cbegin() + count;
 	}
-	Data->reserve(count);
+	Data->clear();
 	Data->insert(Data->end(), v.cbegin(), endItr);
 }
 
@@ -167,16 +174,26 @@ inline void DynArray<itemType>::Copy(const std::vector<itemType>& v, int count)
 template<class itemType>
 inline void DynArray<itemType>::Copy(const std::vector<itemType>& v, unsigned start, unsigned count)
 {
-	if (count <= 0)
+	if (v.empty())
 	{
+		Data->clear();
 		return;
+	}
+	if (start == 0 && count <= 0)
+	{
+		*Data = v;
+		return;
+	}
+	if (start == 0 && count <= 0)
+	{
+		count = (int)v.size()-start;
 	}
 	auto endItr = v.end();
 	if (start + count < v.size())
 	{
 		endItr = v.cbegin() + count;
 	}
-	Data->reserve(count);
+	Data->clear();
 	Data->insert(Data->end(), v.cbegin() + start, endItr);
 }
 

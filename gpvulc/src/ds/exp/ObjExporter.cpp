@@ -60,6 +60,7 @@ namespace gpvulc
 			return false;
 		if (!SaveObjFile(dataset, file_path.GetFullPath(), lib_path.GetFullName()))
 			return false;
+		GPVULC_NOTIFY(LOG_INFO, "\nModel exporter for Wavefront OBJ: file %s successfully exported.\n", file_path.GetFullName().c_str());
 
 		return true;
 	}
@@ -81,8 +82,7 @@ namespace gpvulc
 # \n\
 # Wavefront OBJ material library file\n\
 # Exported by GPVULC-DS " << DS_CURRENT_VERSION << "\n\
-# CNR-STIIMA\n\
-# http://www.stiima.cnr.it/\n\
+# https://github.com/gpvigano/gpvulc/\n\
 # \n";
 
 		OutFile << "# material library " << mtllib->Name << std::endl;
@@ -173,8 +173,7 @@ namespace gpvulc
 # \n\
 # Wavefront OBJ file\n\
 # Exported by GPVULC-DS " << DS_CURRENT_VERSION << "\n\
-# CNR-STIIMA\n\
-# http://www.stiima.cnr.it/\n\
+# https://github.com/gpvigano/gpvulc/\n\
 # \n";
 
 		OutFile << "mtllib " << lib_name << std::endl;
@@ -184,8 +183,14 @@ namespace gpvulc
 		for (i = 0; i < dataset->Objects.Size(); i++)
 		{
 			DsObject* dsobj = dataset->Objects[i];
-			if (!ExportObject(dsobj, dsobj->Transform.GetMatrix()))
-				result = false;
+			bool isRootObject = dsobj->Parent == nullptr;
+			if (isRootObject)
+			{
+				if (!ExportObject(dsobj, dsobj->Transform.GetMatrix()))
+				{
+					result = false;
+				}
+			}
 		}
 		OutFile.close();
 
@@ -238,9 +243,6 @@ namespace gpvulc
 		const DynArray<TexCoord>& texCoords,
 		const Mat4& parent_mat)
 	{
-		int i = 0;
-		Vec3 v, n, t;
-
 		Mat4 mat(parent_mat);
 		//if ( dsgeom->Meshes.Size() && !dsgeom->Meshes[0]->AbsoluteMatrix.IsIdentity() )
 		//  mat = dsgeom->Meshes[0]->AbsoluteMatrix.Inverted();
@@ -256,8 +258,10 @@ namespace gpvulc
 
 		if (vertices.Size())
 		{
+			Vec3 v;
+
 			OutFile << "# " << vertices.Size() << " vertices" << std::endl;
-			for (i = 0; i < vertices.Size(); i++)
+			for (int i = 0; i < vertices.Size(); i++)
 			{
 				if (mat_id)
 					v = vertices[i];
@@ -270,8 +274,9 @@ namespace gpvulc
 
 		if (normals.Size())
 		{
-			OutFile << "# " << vertices.Size() << " normals" << std::endl;
-			for (i = 0; i < normals.Size(); i++)
+			Vec3 n;
+			OutFile << "# " << normals.Size() << " normals" << std::endl;
+			for (int i = 0; i < normals.Size(); i++)
 			{
 				if (rot_id)
 					n = normals[i];
@@ -284,10 +289,12 @@ namespace gpvulc
 
 		if (texCoords.Size())
 		{
-			OutFile << "# " << vertices.Size() << " texture coordinates" << std::endl;
-			for (i = 0; i < texCoords.Size(); i++)
+			TexCoord t;
+			OutFile << "# " << texCoords.Size() << " texture coordinates" << std::endl;
+			for (int i = 0; i < texCoords.Size(); i++)
 			{
-				OutFile << "vt " << texCoords[i].U << " " << texCoords[i].V << std::endl;
+				t = texCoords[i];
+				OutFile << "vt " << t.U << " " << t.V << std::endl;
 				TexcCount++;
 			}
 		}
@@ -392,7 +399,7 @@ namespace gpvulc
 		OutFile << " " << (dsmesh->VertIdx[i] + VertCountOffset + 1);
 		if (dsmesh->TexCoordIdx.Size())
 		{
-			OutFile << "/" << (dsmesh->TexCoordIdx[i] + TexcCountOffset + 1);
+			OutFile << "/" << (dsmesh->TexCoordIdx[i] + 1);
 		}
 		else if (use_vert_as_texc)
 		{
@@ -405,8 +412,8 @@ namespace gpvulc
 		}
 		else if (dsmesh->NormIdx.Size())
 		{
-			if (!dsmesh->TexCoordIdx.Size()) OutFile << "/";
-			OutFile << "/" << (dsmesh->NormIdx[i] + NormCountOffset + 1);
+			if (!dsmesh->TexCoordIdx.Size() && !use_vert_as_texc) OutFile << "/";
+			OutFile << "/" << (dsmesh->NormIdx[i] + 1);
 		}
 		return true;
 	}

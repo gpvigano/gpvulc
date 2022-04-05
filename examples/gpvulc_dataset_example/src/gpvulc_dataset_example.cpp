@@ -10,8 +10,8 @@
 
 // Dataset testing application
 
-#include <gpvulc/ds/exp/ObjExporter.h>
 #include <gpvulc/ds/DsGeomGen.h>
+#include <gpvulc/ds/imp/A3dsLoader.h>   // enable Autodesk 3ds loader
 #include <gpvulc/ds/imp/ObjLoader.h>   // enable Wavefront OBJ loader
 #include <gpvulc/ds/exp/ObjExporter.h> // enable Wavefront OBJ exporter
 #include <gpvulc/fs/FileUtil.h>
@@ -75,9 +75,31 @@ int main(int argc, char* argv[])
 	ChangeCurrDirToFilePath(argv[0]);
 
 	// set the notification level for console messages
-	SetNotifyLevel(LOG_DEBUG);
+	//SetNotifyLevel(LOG_DEBUG);
+	SetNotifyLevel(LOG_VERBOSE);
 
-	if (export_dataset())
+	if (argc > 1)
+	{
+		for (int i = 1; i < argc; i++)
+		{
+			DsDataSet dataset;
+			MtlLib mtllib;
+			PathInfo inFile(argv[i]);
+			if (DsLoadFile(inFile.GetFullPath(), dataset, mtllib))
+			{
+			GPVULC_NOTIFY(LOG_DEBUG, "Data set has %d objects.\n", dataset.Objects.Size());
+
+				PathInfo outFile(argv[i]);
+				outFile.SetExt("obj");
+				if (outFile == inFile)
+				{
+					outFile.SetPath(inFile.GetPath(), "backup");
+				}
+				DsExport(&dataset, &mtllib, outFile.GetFullPath());
+			}
+		}
+	}
+	else if (export_dataset())
 	{
 
 		// copy model files to the given file path

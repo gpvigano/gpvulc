@@ -360,24 +360,18 @@ namespace gpvulc
 			if (v < 0) v = obj->SharedVertices.Size() + v;// geom->Vertices.Size()+v;
 			else v--;
 
-			if (mesh->VertIdx.Size() == mesh->VertIdx.Dimension())
-				mesh->VertIdx.Allocate(2 * mesh->VertIdx.Size());
 			mesh->VertIdx.Add(v);
 
 			if (use_t)
 			{
 				if (t < 0) t = obj->SharedTexCoords.Size() + t;// geom->TexCoords.Size()+t;
 				else t--;
-				if (mesh->TexCoordIdx.Size() == mesh->TexCoordIdx.Dimension())
-					mesh->TexCoordIdx.Allocate(2 * mesh->TexCoordIdx.Size());
 				mesh->TexCoordIdx.Add(t);
 			}
 			if (use_n)
 			{
 				if (n < 0) n = obj->SharedNormals.Size() + n;// geom->Normals.Size()+n;
 				else n--;
-				if (mesh->NormIdx.Size() == mesh->NormIdx.Dimension())
-					mesh->NormIdx.Allocate(2 * mesh->NormIdx.Size());
 				mesh->NormIdx.Add(n);
 			}
 		}
@@ -410,7 +404,7 @@ namespace gpvulc
 			return false;
 		PathInfo f(filename);
 		mtllib->Name = f.GetFullName();
-		GPVULC_NOTIFY(LOG_DEBUG, "Material library: %s.\n", (const std::string&)(mtllib->Name));
+		GPVULC_NOTIFY(LOG_DEBUG, "Material library: %s.\n", mtllib->Name.c_str());
 		char buf[512] = { 0 };
 		TextBuffer strline;
 
@@ -445,7 +439,7 @@ namespace gpvulc
 					currmtl->Parameters.Diffuse.A = 1;
 					currmtl->Parameters.Specular.A = 1;
 					currmtl->Parameters.TwoSided = true;//false; // to be checked
-					GPVULC_NOTIFY(LOG_DEBUG, "Material %s added.\n", (const std::string&)(m.Name));
+					GPVULC_NOTIFY(LOG_DEBUG, "Material %s added.\n", m.Name.c_str());
 				}
 				break;
 
@@ -461,7 +455,7 @@ namespace gpvulc
 							if (WObjMtlReadMap(&strline[6], TEX_SHININESS, m))
 							{
 								currmtl->Maps.Add(m);
-								GPVULC_NOTIFY(LOG_DEBUG, "Specular exp map %s added.\n", (const std::string&)(m.FileName));
+								GPVULC_NOTIFY(LOG_DEBUG, "Specular exp map %s added.\n", m.FileName.c_str());
 							}
 							break;
 						default:
@@ -477,7 +471,7 @@ namespace gpvulc
 							if (WObjMtlReadMap(&strline[6], TEX_REFL_LEV, m))
 							{
 								currmtl->Maps.Add(m);
-								GPVULC_NOTIFY(LOG_DEBUG, "Ambient map %s added.\n", (const std::string&)(m.FileName));
+								GPVULC_NOTIFY(LOG_DEBUG, "Ambient map %s added.\n", m.FileName.c_str());
 							}
 							break;
 						case 'D': //diffuse map
@@ -485,7 +479,7 @@ namespace gpvulc
 							if (WObjMtlReadMap(&strline[6], TEX_DIFFUSE, m))
 							{
 								currmtl->Maps.Add(m);
-								GPVULC_NOTIFY(LOG_DEBUG, "Diffuse map %s added.\n", (const std::string&)(m.FileName));
+								GPVULC_NOTIFY(LOG_DEBUG, "Diffuse map %s added.\n", m.FileName.c_str());
 							}
 							break;
 						case 'S': //specular map
@@ -493,7 +487,7 @@ namespace gpvulc
 							if (WObjMtlReadMap(&strline[6], TEX_SPECULAR, m))
 							{
 								currmtl->Maps.Add(m);
-								GPVULC_NOTIFY(LOG_DEBUG, "Specular map %s added.\n", (const std::string&)(m.FileName));
+								GPVULC_NOTIFY(LOG_DEBUG, "Specular map %s added.\n", m.FileName.c_str());
 							}
 							break;
 						default:
@@ -505,7 +499,7 @@ namespace gpvulc
 						if (WObjMtlReadMap(&strline[5], TEX_OPACITY, m))
 						{
 							currmtl->Maps.Add(m);
-							GPVULC_NOTIFY(LOG_DEBUG, "Opacity map %s added.\n", (const std::string&)(m.FileName));
+							GPVULC_NOTIFY(LOG_DEBUG, "Opacity map %s added.\n", m.FileName.c_str());
 						}
 						break;
 					case 'o': //opacity map
@@ -514,7 +508,7 @@ namespace gpvulc
 							if (WObjMtlReadMap(&strline[11], TEX_OPACITY, m))
 							{
 								currmtl->Maps.Add(m);
-								GPVULC_NOTIFY(LOG_DEBUG, "Opacity map %s added.\n", (const std::string&)(m.FileName));
+								GPVULC_NOTIFY(LOG_DEBUG, "Opacity map %s added.\n", m.FileName.c_str());
 							}
 						}
 						break;
@@ -525,7 +519,7 @@ namespace gpvulc
 							if (WObjMtlReadMap(&strline[8], TEX_BUMP, m))
 							{
 								currmtl->Maps.Add(m);
-								GPVULC_NOTIFY(LOG_DEBUG, "Bump map %s added.\n", (const std::string&)(m.FileName));
+								GPVULC_NOTIFY(LOG_DEBUG, "Bump map %s added.\n", m.FileName.c_str());
 							}
 						}
 						break;
@@ -540,7 +534,7 @@ namespace gpvulc
 					if (WObjMtlReadMap(&strline[4], TEX_ENVIRONMENT, m))
 					{
 						currmtl->Maps.Add(m);
-						GPVULC_NOTIFY(LOG_DEBUG, "Reflection map %s added.\n", (const std::string&)(m.FileName));
+						GPVULC_NOTIFY(LOG_DEBUG, "Reflection map %s added.\n", m.FileName.c_str());
 					}
 				}
 				break;

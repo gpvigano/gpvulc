@@ -119,6 +119,30 @@ namespace
 }
 
 
+bool gpvulc::DsLoadFile(const std::string& file_name, DsDataSet& dataset, MtlLib& mtllib, DsLoaderFlags* flags)
+{
+	PathInfo f(file_name);
+	DsLoader* loader = DsLoader::FindByExt(f.GetExt());
+	if (loader == nullptr)
+	{
+		GPVULC_NOTIFY(LOG_WARN, "3D model type not supported: %s.\n", !f.GetExt().empty() ? f.GetExt() : "(no extension)");
+		return false;
+	}
+
+	// load the data set
+
+	dataset.FilePath = f;
+
+	if(flags)
+	{
+		loader->Flags = *flags;
+	}
+	bool result = loader->LoadFile(f.GetFullPath(), &dataset, &mtllib);
+
+	return result;
+}
+
+
 bool gpvulc::DsListIncludedFiles(DsDataSet* dataset, MtlLib* mtllib, DynArray<TextBuffer>& file_list)
 {
 

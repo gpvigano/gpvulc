@@ -187,6 +187,12 @@ namespace gpvulc
 		virtual bool LoadFile(const std::string& file_name, DsDataSet* dataset, MtlLib* mtllib) = 0;
 	};
 
+	/*!
+	 Get a list of files included by the given 3D model file (excluding the file itself).
+	 Paths are relative to the given file path.
+	*/
+	bool DsLoadFile(const std::string& file_name, DsDataSet& dataset, MtlLib& mtllib, DsLoaderFlags* flags = nullptr);
+
 
 	//@}
 

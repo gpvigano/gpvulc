@@ -14,14 +14,63 @@
 #include <gpvulc/ds/GeoData.h>
 #include <gpvulc/text/TextParser.h>
 #include <gpvulc/ds/util/ConsoleMessage.h>
+#include <map>
 
 namespace gpvulc
 {
-
-
-	bool CalcFaceNormals(std::vector<Vec3>& verts, std::vector<TriangleIndices>& faces, std::vector<Vec3>& faces_normals)
+	void CalculateSmoothNormals(
+		const std::vector<Vec3>& verts,
+		const std::vector<TriangleIndices>& faces,
+		std::vector<Vec3>& vertNormals,
+		std::vector<TriangleIndices>& normalIndices
+	)
 	{
+		size_t num_verts = verts.size();
+		size_t num_faces = faces.size();
+		std::vector<Vec3> usedVertices;
+		std::map<unsigned int, unsigned int> vertToNorm;
 
+		normalIndices.clear();
+		normalIndices.resize(num_faces);
+		// fills in the array
+		for (unsigned int i = 0; i < num_faces; i++)
+		{
+			for (unsigned int k = 0; k < 3; k++)
+			{
+				unsigned int vertIdx = faces[i].VertsIndices[k];
+				unsigned int v1idx = (k + 1) % 3;
+				unsigned int v2idx = (k + 2) % 3;
+				if (vertToNorm.find(vertIdx) == vertToNorm.end())
+				{
+					unsigned int lastIndex = (unsigned int)vertNormals.size();
+					vertToNorm[vertIdx] = lastIndex;
+					vertNormals.push_back(Vec3());
+				}
+				unsigned int vertNormIdx = vertToNorm[vertIdx];
+				normalIndices[i].VertsIndices[k] = vertNormIdx;
+				// normal: p01 x p02
+				Vec3 n;
+				VecNormal(
+					verts[faces[i].VertsIndices[v2idx]],
+					verts[faces[i].VertsIndices[k]],
+					verts[faces[i].VertsIndices[v1idx]],
+					n);
+				vertNormals[vertNormIdx] += n;
+			}
+		}
+		for (unsigned int i = 0; i < vertNormals.size(); i++)
+		{
+			vertNormals[i].Normalize();
+		}
+	}
+
+
+	bool CalcFaceNormals(
+		const std::vector<Vec3>& verts,
+		const std::vector<TriangleIndices>& faces,
+		std::vector<Vec3>& faces_normals
+	)
+	{
 		// error checking
 		if (verts.empty() || faces.empty())
 		{
@@ -36,15 +85,14 @@ namespace gpvulc
 			return false;
 		}
 
-			faces_normals.resize(num_verts);
+		faces_normals.resize(num_verts);
 
 		//  GPVULC_NOTIFY( LOG_DEBUG,"CalcFaceNormals - calculating normals...\n");
 
-		unsigned int i;
 		Vec3 n;
 
 		// fills in the array
-		for (i = 0; i < num_faces; i++)
+		for (unsigned int i = 0; i < num_faces; i++)
 		{
 
 			// normal: p01 x p02
@@ -147,7 +195,7 @@ namespace gpvulc
 		std::vector<Vec3>& new_normals,
 		const std::vector<TexCoord>& tex_coords,
 		std::vector<TexCoord>& new_tex_coords
-		)
+	)
 	{
 
 		// error checking
@@ -179,16 +227,14 @@ namespace gpvulc
 			new_tex_coords.clear();
 		}
 
-		num_verts = new_num_verts;
-		unsigned int i, k, idx;
 		unsigned int count = 0;
 
-		// split shared verices
-		for (i = 0; i < num_faces; i++)
+		// split shared vertices
+		for (unsigned int i = 0; i < num_faces; i++)
 		{     // Go through all of the faces
-			for (k = 0; k < 3; k++)
+			for (unsigned int k = 0; k < 3; k++)
 			{
-				idx = faces[i].VertsIndices[k];
+				unsigned int idx = faces[i].VertsIndices[k];
 				faces[i].VertsIndices[k] = count;
 				new_verts[count] = verts[idx];
 				if (!normals.empty()) new_normals[count] = normals[idx];
@@ -196,7 +242,7 @@ namespace gpvulc
 				count++;
 				if (count > new_num_verts)
 				{
-					GPVULC_NOTIFY(LOG_WARN, "gvSplitTriVerts - vertex list overflow\n");
+					GPVULC_NOTIFY(LOG_WARN, "SplitVerts - vertex list overflow\n");
 					break;
 				}
 			}

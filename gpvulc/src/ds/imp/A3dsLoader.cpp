@@ -23,6 +23,7 @@
 #include <gpvulc/ds/util/BusyCallback.h>
 #include <gpvulc/time/Chrono.h>
 //#include <util/preproc.h>
+#include <map>
 
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -337,7 +338,7 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 			unsigned short high, low;
 			high = temp_chunk.ID / 256;
 			low = temp_chunk.ID % 256;
-			const std::string& descr = gvA3ds_UnknownChunkDescription(temp_chunk.ID);
+			const char* descr = gvA3ds_UnknownChunkDescription(temp_chunk.ID);
 			GPVULC_NOTIFY(LOG_VERBOSE, "...... skipping chunk (%s). Size=%d bytes, ID=0x%02x%02x\n",
 				descr, temp_chunk.Size, high, low);
 			GPVULC_LOG(LOG_DEBUG, "log/a3ds_errors.log",
@@ -370,7 +371,8 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 		{
 			return nullptr;
 		}
-		DsGeom* geom = obj->Geoms[0]; if (!geom)
+		DsGeom* geom = obj->Geoms[0];
+		if (!geom)
 		{
 			return nullptr;
 		}
@@ -446,7 +448,7 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 		GPVULC_NOTIFY(LOG_VERBOSE, "............ loading texture coordinates...\n");
 
 		// allocates space for data
-		geom.TexCoords.Allocate(texture_coords_count);
+		geom.TexCoords.Resize(texture_coords_count);
 
 		// loads data and corrects values using coords scale and offset
 		unsigned int i;
@@ -559,8 +561,8 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 		//FaceCounter+=faces_count;
 
 		mesh.SetType(DS_TRIANGLES);
-		mesh.VertIdx.Allocate(faces_count * 3);
 		mesh.VertIdx.RemoveAll(false);
+		mesh.VertIdx.Allocate(faces_count * 3);
 
 		unsigned short vertidx;
 		// we load the faces: 3 * 2byte blocks of floating point coords,
@@ -643,7 +645,7 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 			return false;
 		}
 		//unsigned char *smoothing_groups; if ((smoothing_groups = new unsigned char[faces_count]) == nullptr) return false;
-		mesh.SmoothingGroups.Allocate(faces_count);
+		mesh.SmoothingGroups.Resize(faces_count);
 		GPVULC_NOTIFY(LOG_VERBOSE, "............ loading smoothing groups...\n");
 
 		// reads faces smoothing group and updates the values into object's structures
@@ -655,6 +657,7 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 
 			// read the long int containing the flags
 			gvA3ds_Load32Bit(fp, group_bits);
+
 			// calculates the logarithm (i-th group = bit 2^i set to 1)
 			for (group = 0; (((group_bits & 0x01) == 0) && (group < 32)); group++, group_bits = group_bits >> 1);
 
@@ -815,14 +818,14 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 		gvCallBusyCallBack("loading objects");
 
 		// we load the name of the object we've found
-		TextBuffer object_name(16, true);
+		std::string object_name;
 		int ch;
 		while ((ch = fgetc(fp)) != 0)
 		{
-			object_name << (char)ch;
+			object_name.append(1, (char)ch);
 		}
 
-		GPVULC_NOTIFY(LOG_VERBOSE, "....... its name is %s\n", (const std::string&)object_name);
+		GPVULC_NOTIFY(LOG_VERBOSE, "....... its name is %s\n", object_name.c_str());
 		//gvCallBusyCallBack("loading objects");
 
 
@@ -851,7 +854,7 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 			default:
 				if (!gvA3ds_SkipChunk(temp_chunk, fp))
 				{
-					GPVULC_NOTIFY(LOG_VERBOSE, "....... not a mesh object, skipped. %s\n", object_name.Get());
+					GPVULC_NOTIFY(LOG_VERBOSE, "....... not a mesh object, skipped. %s\n", object_name.c_str());
 					return false;
 				}
 				break;
@@ -1240,7 +1243,7 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 		long start = ftell(fp);
 		unsigned int size = temp_chunk.Size - 6;
 
-		GPVULC_NOTIFY(LOG_VERBOSE, "... got into 3d editor parser! this chunk is %d bytes long.\n", size);
+		GPVULC_NOTIFY(LOG_VERBOSE, "... got into 3D editor parser! this chunk is %d bytes long.\n", size);
 
 		// while we're not out of the chunk we keep reading chunks
 		while (ftell(fp) < (long)(start + size))
@@ -1500,8 +1503,8 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 		//gvCallBusyCallBack("loading node transformation...");
 
 		unsigned short number = 0;
-		TextBuffer object_name;
-		TextBuffer instance_name;
+		std::string object_name;
+		std::string instance_name;
 		short hierarchy;
 		Vec3 pivot;
 		Vec3 translation;
@@ -1528,13 +1531,13 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 				fseek(fp, ftell(fp) + 4, SEEK_SET);
 				// loads hierarchy
 				gvA3ds_Load16Bit(fp, hierarchy);
-				GPVULC_NOTIFY(LOG_VERBOSE, "......... hierarchy level for object %s (father's number)=%d\n", (const std::string&)object_name, hierarchy);
+				GPVULC_NOTIFY(LOG_VERBOSE, "......... hierarchy level for object %s (father's number)=%d\n", object_name.c_str(), hierarchy);
 				break;
 
 			case GV3DS_KEYFRAMER_OBJECT_INSTANCE_NAME:
 				if (!gvA3ds_ParseString(fp, instance_name))
 					return false;
-				GPVULC_NOTIFY(LOG_VERBOSE, "......... instance name: %s\n", (const std::string&)instance_name);
+				GPVULC_NOTIFY(LOG_VERBOSE, "......... instance name: %s\n", instance_name.c_str());
 				break;
 
 			case GV3DS_KEYFRAMER_OBJECT_PIVOT_OFFSET:
@@ -1586,7 +1589,7 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 		DsObject* object = nullptr;
 		if (object_name == "$$$DUMMY")
 		{
-			GPVULC_NOTIFY(LOG_VERBOSE, "......... Object %s is a $$$DUMMY\n", (const std::string&)instance_name);
+			GPVULC_NOTIFY(LOG_VERBOSE, "......... Object %s is a $$$DUMMY\n", instance_name.c_str());
 			if (!data->AddObject(instance_name))
 				return false;
 			object = data->Objects.GetLast();
@@ -1598,7 +1601,7 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 				object = data->FindObjectByName(object_name);
 			if (!object)
 			{
-				GPVULC_NOTIFY(LOG_WARN, ". Referenced object %s not found\n", (const std::string&)object_name);
+				GPVULC_NOTIFY(LOG_WARN, "Referenced object %s not found\n", object_name.c_str());
 				if (data->AddObject(object_name))
 					object = data->Objects.GetLast();
 			}
@@ -1606,7 +1609,7 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 
 		if (!object)
 		{
-			GPVULC_NOTIFY(LOG_WARN, ". referenced object not found\n");
+			GPVULC_NOTIFY(LOG_WARN, "Referenced object not found\n");
 			return false;
 		}
 
@@ -1772,50 +1775,69 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 	// - first every face's vertex' normal is calculated
 	// - then for each smoothing group normals are interpolated, and if there are faces without
 	//   any smoothing group their normals are kept as they are
-	bool gvA3ds_CalculateNormals(
-		const std::vector<Vec3>& old_vertexes,
-		const std::vector<TexCoord> old_texture_coords,
-		std::vector<TriangleIndices>& faces,
-		std::vector<unsigned int> smoothing_groups,
-		std::vector<Vec3>& new_vertexes,
-		std::vector<Vec3>& normals,
-		std::vector<TexCoord> new_texture_coords)
+	bool gvA3ds_CalculateNormals(DsGeom* geom, DsMesh* mesh)
 	{
+		if (geom->Vertices.Empty())
+		{
+			return false;
+		}
+		unsigned int faces_count = mesh->GetNumFaces();
+		if (faces_count == 0)
+		{
+			return false;
+		}
+		const std::vector<Vec3> vertices = geom->Vertices.GetData();
+		unsigned int vertices_count = (unsigned int)vertices.size();
+		const std::vector<TexCoord> textureCoords = geom->TexCoords.GetData();
+		std::vector<unsigned int>& smoothing_groups = mesh->SmoothingGroups.GetData();
+		std::vector<Vec3>& newVertices = geom->Vertices.GetData();
+		std::vector<Vec3>& newNormals = geom->Normals.GetData();
+		std::vector<TexCoord>& newTextureCoords = geom->TexCoords.GetData();
 
-		// error check
-		if (old_vertexes.empty())
-		{
-			return false;
+		//TriangleIndices* tris = (TriangleIndices*)(&(mesh->VertIdx.GetData()[0]));
+		//memcpy(&faces[0], tris, faces.size()*sizeof(TriangleIndices));
+		//TriangleIndices* faces = new TriangleIndices[faces_count];
+
+		std::vector<TriangleIndices> faces(faces_count);
+		for (unsigned int i = 0; i < faces_count; i++) {
+			faces[i] = TriangleIndices(mesh->VertIdx[i * 3 + 0], mesh->VertIdx[i * 3 + 1], mesh->VertIdx[i * 3 + 2]);
 		}
-		if (faces.empty())
-		{
-			return false;
-		}
-		unsigned int old_vertexes_count = (unsigned int)old_vertexes.size();
-		unsigned int faces_count = (unsigned int)faces.size();
-		unsigned int i, j, k;
+
 		bool only_one_sg = true;
 
 		// with smoothing groups: normals one the same vertex are interpolated together
 		if (!smoothing_groups.empty())
 		{
-
 			only_one_sg = true;
 			// check if there is only one smoothing group
-			for (i = 1; i < faces_count; i++)
-				if (smoothing_groups[i] != smoothing_groups[0]) { only_one_sg = false; break; }
+			for (unsigned int i = 1; i < faces_count; i++)
+			{
+				if (smoothing_groups[i] != smoothing_groups[0])
+				{
+					only_one_sg = false;
+					break;
+				}
+			}
 			//    only_one_sg=true;
 
 			if (only_one_sg)
 			{
 				GPVULC_NOTIFY(LOG_VERBOSE, "...... single smoothing group: interpolating normals...\n");
 				// creates an array to temporary hold faces normals
-				normals.resize(old_vertexes_count);
+				newNormals.resize(vertices_count);
 
-				CalcVertNormals(old_vertexes, faces, normals);
-
-				new_vertexes = old_vertexes;
-				new_texture_coords = old_texture_coords;
+				CalcVertNormals(vertices, faces, newNormals);
+				mesh->VertIdx.Clear();
+				mesh->VertIdx.Allocate(3*(unsigned int)faces.size());
+				for(size_t i=0; i<faces.size(); i++)
+				{
+					for (size_t k = 0; k < 3; k++)
+					{
+						mesh->VertIdx.Add(faces[i].VertsIndices[k]);
+					}
+				}
+				newVertices = vertices;
+				newTextureCoords = textureCoords;
 
 				GPVULC_NOTIFY(LOG_VERBOSE, "...... single smoothing group: normals interpolated.\n");
 
@@ -1823,171 +1845,70 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 			else
 			{  // more than one smoothing group
 
-	 // To calculate normals for each smoothing group we need to split the geometry
-	 // into separate parts, one for each smoothing group. Once the geometry data
-	 // (vertices, faces, texture ccordinates) are splitted and grouped we can
-	 // calculate normals for the entire geometry and we obtain the expected result.
+				 // To calculate normals for each smoothing group we need to split the geometry
+				 // into separate parts, one for each smoothing group. Once the geometry data
+				 // (vertices, faces, texture ccordinates) are splitted and grouped we can
+				 // calculate normals for the entire geometry and we obtain the expected result.
 
-				unsigned int sg_faces_count[256] = { 0 };
-				unsigned int sg_max = 0;
-				bool used_sg[256];
-				unsigned int sg_verts_count[256] = { 0 };
-				unsigned int idx = 0;
+				std::map<unsigned int, std::vector<TriangleIndices>> facesGroups;
 
-				memset(used_sg, 0, 256);
-
-				// find the maximum value for a smoothing group
-				for (i = 0; i < faces_count; i++)
+				for (unsigned int i = 0; i < faces_count; i++)
 				{
-					if (sg_max < smoothing_groups[i])
-					{
-						sg_max = smoothing_groups[i];
-					}
-					used_sg[smoothing_groups[i]] = true;
+					facesGroups[smoothing_groups[i]].push_back(TriangleIndices(faces[i].VertsIndices[0], faces[i].VertsIndices[1], faces[i].VertsIndices[2]));
 				}
-
-				// remap smoothing groups in a continuous sequence from 0 to sg_max
-				unsigned char sg_map[256];
-				unsigned int sg_map_counter = 0;
-				for (i = 0; i <= sg_max; i++)
+				newNormals.clear();
+				mesh->VertIdx.Clear();
+				mesh->NormIdx.Clear();
+				for (auto g : facesGroups)
 				{
-					if (used_sg[i])
-					{
-						sg_map[i] = sg_map_counter;
-						sg_map_counter++;
-					}
-				}
-
-				sg_max = sg_map[sg_max];
-				unsigned int num_sg = sg_max + 1;
-				for (i = 0; i < faces_count; i++)
-				{
-					smoothing_groups[i] = sg_map[smoothing_groups[i]];
-				}
-
-				// allocate the usage flags [verts x smooth_g] matrix
-				std::vector<bool> sg_used_verts(old_vertexes_count*num_sg);
-
-				// count the faces for each smoothing group
-				for (i = 0; i < faces_count; i++)
-				{
-					sg_faces_count[smoothing_groups[i]]++;
-					// set smoothing groups for each vertex
-					for (k = 0; k < 3; k++)
-					{
-						idx = faces[i].VertsIndices[k];
-						// check smoothing groups for each vertex ([idx][smoothing_groups[i]])
-						sg_used_verts[idx*num_sg + smoothing_groups[i]] = true;
-					}
-				}
-
-				// calculate the new number of vertices
-				// (vertices used by more smoothing groups will be duplicated)
-				size_t new_vertexes_count = 0;
-				for (i = 0; i < num_sg; i++)
-				{
-					for (j = 0; j < old_vertexes_count; j++)
-					{
-						if (sg_used_verts[j*num_sg + i])
-						{
-							new_vertexes_count++;
-							// count vertices for each smoothing group
-							sg_verts_count[i]++;
-						}
-					}
-				}
-
-				// creates the new vertex array
-				new_vertexes.resize(new_vertexes_count);
-
-				// create a matrix to map old_vertexes to new_vertexes
-
-				// vertices remapping matrix
-				std::vector<unsigned int> verts_map(old_vertexes_count*num_sg);
-
-				// handle texture coordinates
-				if (!old_texture_coords.empty())
-				{
-					new_texture_coords.resize(new_vertexes_count);
-				}
-
-				// copy vertices in the new list ordered by smoothing group
-				unsigned int new_vert_idx = 0;
-				for (i = 0; i < num_sg; i++)
-				{
-					for (j = 0; j < old_vertexes_count; j++)
-					{
-						if (sg_used_verts[j*num_sg + i])
-						{
-							new_vertexes[new_vert_idx] = old_vertexes[j];
-							// copy texture coordinates if needed
-							if (!new_texture_coords.empty())
-							{
-								new_texture_coords[new_vert_idx] = old_texture_coords[j];
-							}
-							// map vertex indices to the new array
-							verts_map[j*num_sg + i] = new_vert_idx;
-							new_vert_idx++; // next index in the new list
-						}
-					}
-				}
-
-				// create a copy of faces list
-				std::vector<TriangleIndices> temp_faces(faces); // temporary list of faces
-
-				// map faces indices (by smoothing groups)
-				std::vector<unsigned int> sg_faces_idx(faces_count);
-				sg_faces_idx[0] = 0;
-				unsigned int newfaceidx;
-				newfaceidx = 0;
-				for (i = 0; i < num_sg; i++)
-				{
-					for (j = 0; j < faces_count; j++)
-					{
-						if (smoothing_groups[j] == i) sg_faces_idx[j] = newfaceidx++;
-					}
-				}
-
-				// remap faces on new_vertexes
-				// sorting faces by smoothing group
-				unsigned int newidx;
-				for (i = 0; i < faces_count; i++)
-				{
-					newfaceidx = sg_faces_idx[i];
-					for (k = 0; k < 3; k++)
-					{
-						idx = temp_faces[i].VertsIndices[k];
-						newidx = verts_map[idx*num_sg + smoothing_groups[i]];
-						faces[newfaceidx].VertsIndices[k] = newidx;
-					}
-				}
-
-				// build and smooth normals by smoothing group
-
-				// creates the vertex and normals array
-				normals.resize(new_vertexes_count);
-
-				// calculate vertex normals
-		  //      CalcVertNormals(new_vertexes, new_vertexes_count,
-		  //                       faces, faces_count,
-		  //                       normals);
-
-				unsigned int sg_vertsbeg = 0, sg_facesbeg = 0;
-				for (i = 0; i < num_sg; i++)
-				{
-					GPVULC_NOTIFY(LOG_VERBOSE, "....... smoothing group %d: interpolating normals (faces %d-%d)...\n", i, sg_facesbeg, sg_facesbeg + sg_faces_count[i] - 1);
+					GPVULC_NOTIFY(LOG_VERBOSE, "....... smoothing group %d: interpolating normals...\n", g.first);
 					gvCallBusyCallBack("calculating normals - processing smoothing groups");
-					CalcVertNormals(new_vertexes,
-						faces,
-						normals,
-						sg_vertsbeg, sg_verts_count[i],
-						sg_facesbeg, sg_faces_count[i]);
-					sg_vertsbeg += sg_verts_count[i];
-					sg_facesbeg += sg_faces_count[i];
+					std::vector<TriangleIndices> normalIndices;
+					CalculateSmoothNormals(newVertices, g.second, newNormals, normalIndices);
+					for (size_t i = 0; i<g.second.size(); i++)
+					{
+						for (size_t k = 0; k < 3; k++)
+						{
+							mesh->VertIdx.Add(g.second[i].VertsIndices[k]);
+							mesh->NormIdx.Add(normalIndices[i].VertsIndices[k]);
+						}
+					}
 				}
+				////size_t facesCount = 0;
+				////newVertices.clear();
+				////newTextureCoords.clear();
+				////mesh->VertIdx.Clear();
+				////for (auto g : facesGroups)
+				////{
+				////	size_t i = g.first;
+				////	GPVULC_NOTIFY(LOG_VERBOSE, "....... smoothing group %d: interpolating normals...\n", g.first);
+				////	gvCallBusyCallBack("calculating normals - processing smoothing groups");
+				////	// split faces: redirect faces vertices
+
+				////	std::vector<Vec3> noNormals;
+				////	std::vector<Vec3> groupVerts;
+				////	std::vector<Vec3> groupNorms;
+				////	std::vector<TexCoord> groupTexCoords;
+				////	newNormals.clear();
+				////	SplitVerts(vertices, groupVerts,
+				////		g.second,
+				////		noNormals, groupNorms,
+				////		textureCoords, groupTexCoords);
+				////	CalcFaceNormals(groupVerts, g.second, groupNorms);
+				////	for (size_t i = 0; i<g.second.size(); i++)
+				////	{
+				////		for (size_t k = 0; k < 3; k++)
+				////		{
+				////			mesh->VertIdx.Add(g.second[i].VertsIndices[k]+newVertices.size());
+				////		}
+				////	}
+				////	facesCount += g.second.size();
+				////	newVertices.insert(newVertices.end(), groupVerts.begin(), groupVerts.end());
+				////	newNormals.insert(newNormals.end(), groupNorms.begin(), groupNorms.end());
+				////	newTextureCoords.insert(newTextureCoords.end(), groupTexCoords.begin(), groupTexCoords.end());
+				////}
 
 				GPVULC_NOTIFY(LOG_VERBOSE, "...... normals built.\n");
-
 			}
 			// without smoothing groups: for each face we use 3 distinct vertices and normals (no interpolation)
 		}
@@ -1995,24 +1916,32 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 		{  // smoothing_groups==nullptr
 			GPVULC_NOTIFY(LOG_VERBOSE, "...... calculating normals (no smoothing group)...\n");
 
-			normals.clear();
+			newNormals.clear();
 
 			std::vector<Vec3> noNormals;
-			// split faces: redirect faces vertices
-			SplitVerts(old_vertexes,
-				new_vertexes,
-				faces,
-				noNormals, normals,
-				old_texture_coords, new_texture_coords);
-			// creates the normals array
-	  //      normals = new Vec3[new_vertexes_count];
-	  //      if (normals==nullptr) {
-	  //        GPVULC_NOTIFY( LOG_FATAL,"gvA3ds_CalculateNormals - Memory allocation failed (normals)\n");
-	  //        return false;
-	  //      }
 
-			CalcFaceNormals(new_vertexes, faces, normals);
-			//printf("old_vertexes_count=%d faces_count=%d new_vertexes_count=%d  \n",old_vertexes_count,faces_count,new_vertexes_count);
+			// split faces: redirect faces vertices
+			SplitVerts(vertices,
+				newVertices,
+				faces,
+				noNormals, newNormals,
+				textureCoords, newTextureCoords);
+
+			CalcFaceNormals(newVertices, faces, newNormals);
+
+			mesh->VertIdx.Clear();
+			mesh->NormIdx.Clear();
+			mesh->TexCoordIdx.Clear();
+			//mesh->VertIdx.Allocate(3 * faces.size());
+			for (size_t i = 0; i<faces.size(); i++)
+			{
+				for (size_t k = 0; k < 3; k++)
+				{
+					mesh->VertIdx.Add(faces[i].VertsIndices[k]);
+					mesh->NormIdx.Add(faces[i].VertsIndices[k]);
+					mesh->TexCoordIdx.Add(faces[i].VertsIndices[k]);
+				}
+			}
 		}
 
 		return true;
@@ -2040,23 +1969,11 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 
 		// calculates object normals
 
-		std::vector<TriangleIndices> faces(mesh->VertIdx.Size());
-
-		TriangleIndices* tris = (TriangleIndices*)(&(mesh->VertIdx.GetData()[0]));
-		memcpy(&faces[0], tris, faces.size()*sizeof(TriangleIndices));
-		//TriangleIndices* faces = new TriangleIndices[faces_count];
-		//int i;
-		//for( i=0; i<faces_count; i++ ) {
-		//  faces[i] = TriangleIndices(mesh->VertIdx[i*3+0],mesh->VertIdx[i*3+1],mesh->VertIdx[i*3+2]);
-		//}
 
 		GPVULC_NOTIFY(LOG_VERBOSE, ".... calculating normals...\n");
 		gvCallBusyCallBack("calculating normals");
 
-		if (!(gvA3ds_CalculateNormals(geom->Vertices.GetData(), geom->TexCoords.GetData(), faces,
-			mesh->SmoothingGroups.GetData(),
-			//SmoothingFlag?smoothing_groups:nullptr,
-			geom->Vertices.GetData(), geom->Normals.GetData(), geom->TexCoords.GetData())))
+		if (!gvA3ds_CalculateNormals(geom, mesh))
 		{
 
 			return false;
@@ -2267,6 +2184,35 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 
 
 			GPVULC_NOTIFY(LOG_VERBOSE, ".. processing mesh transform for geometry %s (material=%s)\n", geom->Name.Get(), mesh->MtlName.IsEmpty() ? "<none>" : mesh->MtlName.Get());
+			////if (mtllib)
+			////{
+			////	Material& mtl = mtllib->GetMaterial(mesh->MtlName);
+			////	for (int k = 0; k < mtl.Maps.Size(); k++)
+			////	{
+			////		// TODO: handle texture transformation
+			////		MtlTexMap& texMap = mtl.Maps[k];
+			////		if (texMap.Type == TEX_DIFFUSE && texMap.Rotation!=0.0f)
+			////		{
+			////			GPVULC_NOTIFY(LOG_WARN, "... Map %s has a rotation of %f: this can be lost if exported.\n", texMap.FileName.c_str(), texMap.Rotation);
+			////			
+			////				//Vec3 trans(-dMap.UOffset, -dMap.VOffset, 0.0);
+			////				//QuatRotate(trans, Vec3(0, 0, -1), -dMap.Rotation, trans);
+			////				//for(int i=0; i<mesh->TexCoordIdx.Size(); i++)
+			////				//{
+			////				//Translate(trans.X * dMap.UScale, trans.Y * dMap.VScale, 0.0);
+
+			////				//// centers the texture in [0.5, 0.5], rotates and scales it
+			////				//Translate(0.5, 0.5, 0.0);
+			////				//Scale(dMap.UScale, dMap.VScale, 1.0);
+			////				//Rotate(dMap.Rotation, 0.0, 0.0, -1.0);
+			////				//Translate(-0.5, -0.5, 0.0);
+
+			////				//}
+
+			////				break;
+			////		}
+			////	}
+			////}
 
 			// do not flip objects if the parent is a dummy object
 			bool dont_flip = obj.Parent && obj.Parent->IsDummy;
@@ -2463,13 +2409,13 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 		FILE* fp = fopen(a3dsfile.GetFullPath().c_str(), "rb");
 		if (!fp)
 		{
-			GPVULC_NOTIFY(LOG_WARN, "Could not open file %s!\n", a3dsfile.GetFullPath());
+			GPVULC_NOTIFY(LOG_WARN, "Could not open file %s!\n", a3dsfile.GetFullPath().c_str());
 			return false;
 		}
 		GPVULC_NOTIFY(LOG_INFO, "-----------------------------\n");
 		GPVULC_NOTIFY(LOG_INFO, "Model loader for Autodesk 3ds\n");
 		GPVULC_NOTIFY(LOG_INFO, "-----------------------------\n");
-		GPVULC_NOTIFY(LOG_INFO, "Loading 3ds file \"%s\"...\n", a3dsfile.GetFullPath());
+		GPVULC_NOTIFY(LOG_INFO, "Loading 3ds file \"%s\"...\n", a3dsfile.GetFullPath().c_str());
 
 		Chrono chrono;
 		chrono.Start();
@@ -2478,7 +2424,7 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 
 		if (!gvA3ds_ParseFile(data, mtllib, fp))
 		{
-			GPVULC_NOTIFY(LOG_WARN, "Could not parse the file %s!\n", a3dsfile.GetFullPath());
+			GPVULC_NOTIFY(LOG_WARN, "Could not parse the file %s!\n", a3dsfile.GetFullPath().c_str());
 			fclose(fp);
 			return false;
 		}
@@ -2491,7 +2437,7 @@ double KeyFramerTimeScaling = 0.0333333333333333333;
 
 		if (!gvA3ds_SetupData(data, mtllib))
 		{
-			GPVULC_NOTIFY(LOG_WARN, "Failed to setup data from file %s!\n", a3dsfile.GetFullPath());
+			GPVULC_NOTIFY(LOG_WARN, "Failed to setup data from file %s!\n", a3dsfile.GetFullPath().c_str());
 			return false;
 		}
 

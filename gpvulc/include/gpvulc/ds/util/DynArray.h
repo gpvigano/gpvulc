@@ -187,10 +187,10 @@ namespace gpvulc
 		//! Add an element at last position only if it is not yet present
 		bool AddUnique(itemType data);
 
-		//! Return itemType data vector: read only
+		//! Return data vector
 		std::vector<itemType>& GetData() { return *Data; }
 
-		//! Return itemType data vector: read only
+		//! Return data vector (read only)
 		const std::vector<itemType>& GetData() const { return *Data; }
 
 		//! Get the i-th element of the array.
