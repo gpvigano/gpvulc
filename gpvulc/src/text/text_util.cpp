@@ -14,7 +14,6 @@
 
 
 #include <gpvulc/text/text_util.h>
-#include <gpvulc/console/console_util.h>
 
 #include <fstream>
 
@@ -225,7 +224,7 @@ namespace gpvulc
 
 
 
-	bool LoadText(const std::string& path, std::string& text, bool append)
+	bool LoadText(const std::string& path, std::string& text, bool append, bool asUtf16)
 	{
 		if (path.empty())
 		{
@@ -233,7 +232,15 @@ namespace gpvulc
 		}
 
 		std::ifstream textFileStream(path);
-		bool result = ReadText(textFileStream, text, append);
+		bool result = false;
+		if (asUtf16)
+		{
+			result = ReadText16(textFileStream, text, append);
+		}
+		else
+		{
+			result = ReadText(textFileStream, text, append);
+		}
 		textFileStream.close();
 		return result;
 	}
@@ -278,6 +285,34 @@ namespace gpvulc
 
 			text.assign((std::istreambuf_iterator<char>(textStream)),
 				std::istreambuf_iterator<char>());
+		}
+
+		return true;
+	}
+
+
+	bool ReadText16(std::istream& textStream, std::string& text, bool append)
+	{
+		if (!textStream.good())
+		{
+			return false;
+		}
+
+		std::streampos streamStart = textStream.tellg();
+		textStream.seekg(0, std::ios::end);
+		size_t textSize = (size_t)(textStream.tellg() - streamStart);
+		textStream.seekg(streamStart, std::ios::beg);
+		std::string text16;
+		text16.reserve(textSize);
+
+		text16.assign((std::istreambuf_iterator<char>(textStream)),
+			std::istreambuf_iterator<char>());
+
+		text.resize(append ? text.size() + text16.size() / 2 : text16.size() / 2);
+		size_t startIdx = append ? text.size() : 0;
+		for (size_t i = 2; i < text16.size(); i += 2)
+		{
+			text[startIdx + i / 2 -1] = text16[i];
 		}
 
 		return true;

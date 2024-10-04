@@ -74,7 +74,8 @@ namespace gpvulc
 		char* argv[],
 		std::function<unsigned(const std::string& srcText, std::string& outSrcText)> textConverterFunc,
 		const std::vector<std::string>& fileFilters = {},
-		bool disableConsolePause = false
+		bool disableConsolePause = false,
+		bool asUtf16 = false
 		);
 		
 	///@}

@@ -336,27 +336,44 @@ namespace gpvulc
 
 	TextBuffer& TextBuffer::Crop(const std::string& startstr, const std::string& endstr)
 	{
-		size_t begidx, endidx;
+		size_t begIdx;
+		size_t endIdx;
 
 		if (mStdString.empty())
 		{
 			return *this;
 		}
 
-		begidx = 0;
+		begIdx = 0;
 		if (!startstr.empty())
 		{
-			size_t idx = mStdString.find_first_not_of(startstr, begidx);
-			if (idx != std::string::npos) begidx = idx;
+			size_t idx = mStdString.find_first_not_of(startstr, begIdx);
+			if (idx != std::string::npos)
+			{
+				begIdx = idx;
+			}
+			else
+			{
+				mStdString.clear();
+				return *this;
+			}
 		}
-		endidx = Length() - 1;
+		endIdx = Length() - 1;
 		if (!endstr.empty())
 		{
 			size_t idx = mStdString.find_last_not_of(endstr);
-			if (idx != std::string::npos) endidx = idx;
+			if (idx != std::string::npos)
+			{
+				endIdx = idx;
+			}
+			else
+			{
+				mStdString.clear();
+				return *this;
+			}
 		}
 
-		SubString((int)begidx, (int)endidx);
+		SubString((int)begIdx, (int)endIdx);
 		return *this;
 	}
 

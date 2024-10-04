@@ -478,6 +478,7 @@ namespace gpvulc
 		mUndoPos.clear();
 		//for (size_t i=0; i<mUndoPos.size(); ++i) mUndoPos[i] = 0;
 		mBookmarks.clear();
+		mResult.clear();
 	}
 
 

@@ -27,13 +27,14 @@ namespace gpvulc
 		PathInfo& srcOutFilePath,
 		const PathInfo& exePath,
 		std::vector<PathInfo>& changedFiles,
-		std::function<unsigned(const std::string& srcText, std::string& outSrcText)>& ProcessText
+		std::function<unsigned(const std::string& srcText, std::string& outSrcText)>& ProcessText,
+		bool asUtf16 = false
 		)
 	{
 		std::string srcText;
 
 		std::cout << exePath.GetName() << ": Loading " << srcFilePath.GetFullPath() << std::endl;
-		if (!LoadText(srcFilePath.GetFullPath(), srcText))
+		if (!LoadText(srcFilePath.GetFullPath(), srcText, false, asUtf16))
 		{
 			std::cerr << exePath.GetName() << ": error reading " << srcFilePath.GetFullPath() << std::endl;
 			return false;
@@ -67,7 +68,8 @@ namespace gpvulc
 		char* argv[],
 		std::function<unsigned(const std::string& srcText, std::string& outSrcText)> textConverterFunc,
 		const std::vector<std::string>& fileFilters,
-		bool disableConsolePause
+		bool disableConsolePause,
+		bool asUtf16
 		)
 	{
 		assert(textConverterFunc);
@@ -144,7 +146,7 @@ namespace gpvulc
 							outFilePath.SetPath(outPath.GetPath(), outFilePath.GetPath());
 							CreateDir(outFilePath.GetPath(), true);
 						}
-						if (!ProcessFile(fileObj, outFilePath, exePath, changedFiles, textConverterFunc))
+						if (!ProcessFile(fileObj, outFilePath, exePath, changedFiles, textConverterFunc, asUtf16))
 						{
 							errorCount++;
 						}
@@ -158,7 +160,7 @@ namespace gpvulc
 				if (srcFilePath.MatchesPatterns(fileFilters))
 				{
 					std::cout << exePath.GetName() << ": processing file " << srcFilePath.GetFullName() << "..." << std::endl;
-					if (!ProcessFile(srcFilePath, srcOutFilePath, exePath, changedFiles, textConverterFunc))
+					if (!ProcessFile(srcFilePath, srcOutFilePath, exePath, changedFiles, textConverterFunc, asUtf16))
 					{
 						errorCount++;
 					}
