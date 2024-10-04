@@ -170,9 +170,10 @@ namespace gpvulc
 	@param path path name of the file
 	@param text the string to be read
 	@param append append the file content to the string
+	@param asUtf16 load the file as UTF-16 encoded
 	@return false on error
 	*/
-	bool LoadText(const std::string& path, std::string& text, bool append = false);
+	bool LoadText(const std::string& path, std::string& text, bool append = false, bool asUtf16 = false);
 
 
 	/*!
@@ -186,13 +187,23 @@ namespace gpvulc
 
 
 	/*!
-	Load a text file from the given stream to the given string.
+	Load a UTF-8 text file from the given stream to the given string.
 	@param textStream text input stream
 	@param[out] text the string to be read
 	@param append append the read text to the string
 	@return false on error
 	*/
 	bool ReadText(std::istream& textStream, std::string& text, bool append = false);
+
+
+	/*!
+	Load a UTF-16 text file from the given stream to the given string.
+	@param textStream text input stream
+	@param[out] text the string to be read
+	@param append append the read text to the string
+	@return false on error
+	*/
+	bool ReadText16(std::istream& textStream, std::string& text, bool append = false);
 
 
 	/*!
